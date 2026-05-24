@@ -63,6 +63,8 @@ void shouldRejectReadingWhenTemperatureIsBelowMinimum();
 void shouldRejectReadingWhenTemperatureIsAboveMaximum();
 void shouldRejectReadingWhenHumidityIsBelowMinimum();
 void shouldRejectReadingWhenHumidityIsAboveMaximum();
+void shouldAcceptReadingWhenLuminosityIsValid();
+void shouldRejectReadingWhenLuminosityIsInvalid();
 
 void shouldBuildOfficialMqttTopicWhenRoomAndDeviceAreProvided() {
     std::string topic = buildEnvironmentTopic("bedroom", "esp32-bedroom-01");
@@ -105,6 +107,55 @@ void shouldBuildPayloadWhenTemperatureAndHumidityAreValid() {
     TEST_ASSERT_TRUE(document["counter"].isNull());
     TEST_ASSERT_FALSE(payload.find("SEU_WIFI") != std::string::npos);
     TEST_ASSERT_FALSE(payload.find("SUA_SENHA") != std::string::npos);
+}
+
+void shouldBuildPayloadWithLuminosityWhenLightReadingIsValid() {
+    EnvironmentReading reading;
+    reading.temperatureCelsius = 27.4f;
+    reading.humidityPercentage = 62.5f;
+    reading.luminosityLux = 123.0f;
+    reading.hasTemperature = true;
+    reading.hasHumidity = true;
+    reading.hasLuminosity = true;
+
+    std::string payload = buildEnvironmentPayloadJson(
+        reading,
+        "bedroom",
+        "esp32-bedroom-01",
+        "2026-05-24T12:00:00Z"
+    );
+
+    TEST_ASSERT_FALSE(payload.empty());
+
+    JsonDocument document;
+    DeserializationError error = deserializeJson(document, payload.c_str());
+    TEST_ASSERT_EQUAL(DeserializationError::Ok, error.code());
+
+    TEST_ASSERT_EQUAL_STRING("esp32-bedroom-01", document["deviceId"]);
+    TEST_ASSERT_EQUAL_STRING("bedroom", document["room"]);
+    TEST_ASSERT_EQUAL_FLOAT(27.4f, document["temperatureCelsius"]);
+    TEST_ASSERT_EQUAL_FLOAT(62.5f, document["humidityPercentage"]);
+    TEST_ASSERT_EQUAL_FLOAT(123.0f, document["luminosityLux"]);
+    TEST_ASSERT_EQUAL_STRING("2026-05-24T12:00:00Z", document["measuredAt"]);
+}
+
+void shouldOmitLuminosityWhenLightReadingIsInvalid() {
+    EnvironmentReading reading;
+    reading.temperatureCelsius = 27.4f;
+    reading.hasTemperature = true;
+
+    std::string payload = buildEnvironmentPayloadJson(
+        reading,
+        "bedroom",
+        "esp32-bedroom-01",
+        "2026-05-24T12:00:00Z"
+    );
+
+    JsonDocument document;
+    deserializeJson(document, payload.c_str());
+
+    TEST_ASSERT_FALSE(document["temperatureCelsius"].isNull());
+    TEST_ASSERT_TRUE(document["luminosityLux"].isNull());
 }
 
 void shouldOmitTemperatureWhenTemperatureIsInvalid() {
@@ -175,7 +226,7 @@ void shouldIncludeMeasuredAtWhenTimestampIsAvailable() {
 
 void shouldPublishWhenReadingAndTimestampAreValid() {
     FakeMqttClient client;
-    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01");
+    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01", "192.168.1.200", 1883);
 
     EnvironmentReading reading;
     reading.temperatureCelsius = 27.4f;
@@ -193,7 +244,7 @@ void shouldPublishWhenReadingAndTimestampAreValid() {
 
 void shouldNotPublishWhenReadingIsInvalid() {
     FakeMqttClient client;
-    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01");
+    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01", "192.168.1.200", 1883);
 
     EnvironmentReading reading;
 
@@ -205,7 +256,7 @@ void shouldNotPublishWhenReadingIsInvalid() {
 
 void shouldNotPublishWhenTimestampIsEmpty() {
     FakeMqttClient client;
-    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01");
+    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01", "192.168.1.200", 1883);
 
     EnvironmentReading reading;
     reading.temperatureCelsius = 27.4f;
@@ -219,7 +270,7 @@ void shouldNotPublishWhenTimestampIsEmpty() {
 
 void shouldPublishToOfficialEnvironmentTopic() {
     FakeMqttClient client;
-    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01");
+    MqttPublisher publisher(client, "bedroom", "esp32-bedroom-01", "192.168.1.200", 1883);
 
     EnvironmentReading reading;
     reading.temperatureCelsius = 27.4f;
@@ -241,9 +292,13 @@ int main(int argc, char** argv) {
     RUN_TEST(shouldRejectReadingWhenTemperatureIsAboveMaximum);
     RUN_TEST(shouldRejectReadingWhenHumidityIsBelowMinimum);
     RUN_TEST(shouldRejectReadingWhenHumidityIsAboveMaximum);
+    RUN_TEST(shouldAcceptReadingWhenLuminosityIsValid);
+    RUN_TEST(shouldRejectReadingWhenLuminosityIsInvalid);
     RUN_TEST(shouldBuildOfficialMqttTopicWhenRoomAndDeviceAreProvided);
     RUN_TEST(shouldNotUseDeprecatedMqttTopicFormat);
     RUN_TEST(shouldBuildPayloadWhenTemperatureAndHumidityAreValid);
+    RUN_TEST(shouldBuildPayloadWithLuminosityWhenLightReadingIsValid);
+    RUN_TEST(shouldOmitLuminosityWhenLightReadingIsInvalid);
     RUN_TEST(shouldOmitTemperatureWhenTemperatureIsInvalid);
     RUN_TEST(shouldOmitHumidityWhenHumidityIsInvalid);
     RUN_TEST(shouldNotBuildPayloadWhenNoSensorValueIsValid);

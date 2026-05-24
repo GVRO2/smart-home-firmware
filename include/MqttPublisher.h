@@ -7,7 +7,13 @@
 
 class MqttPublisher {
 public:
-    MqttPublisher(IMqttClient& client, const char* roomSlug, const char* deviceExternalId);
+    MqttPublisher(
+        IMqttClient& client,
+        const char* roomSlug,
+        const char* deviceExternalId,
+        const char* host,
+        int port
+    );
 
     void connect();
     void ensureConnected();
@@ -20,5 +26,7 @@ private:
     IMqttClient& client_;
     const char* roomSlug_;
     const char* deviceExternalId_;
+    const char* host_;
+    int port_;
     unsigned long lastConnectAttemptAt_;
 };

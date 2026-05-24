@@ -26,9 +26,5 @@ EnvironmentReading DhtEnvironmentSensor::read() {
         reading.humidityPercentage = humidity;
     }
 
-    if (!reading.hasAnyValidValue()) {
-        Serial.println("Leitura DHT invalida.");
-    }
-
     return reading;
 }

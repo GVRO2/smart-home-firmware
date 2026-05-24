@@ -24,3 +24,16 @@ Execute o check local de segredos e placeholders:
 
 - `pio run`
 - `pio run --target upload`
+
+## Validacao manual do BH1750
+
+Com o GY-302 V322 conectado em SDA GPIO 21, SCL GPIO 22 e ADDR no GND, abra:
+
+- `pio device monitor`
+
+Logs esperados:
+
+- `BH1750 inicializado no endereco I2C 0x23`
+- ou `Falha ao inicializar BH1750 no endereco I2C 0x23`
+
+Quando a leitura for valida, o payload MQTT deve incluir `luminosityLux`.

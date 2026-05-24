@@ -10,8 +10,19 @@ namespace {
 constexpr unsigned long MQTT_RETRY_INTERVAL_MS = 10000;
 }
 
-MqttPublisher::MqttPublisher(IMqttClient& client, const char* roomSlug, const char* deviceExternalId)
-    : client_(client), roomSlug_(roomSlug), deviceExternalId_(deviceExternalId), lastConnectAttemptAt_(0) {
+MqttPublisher::MqttPublisher(
+    IMqttClient& client,
+    const char* roomSlug,
+    const char* deviceExternalId,
+    const char* host,
+    int port
+)
+    : client_(client),
+      roomSlug_(roomSlug),
+      deviceExternalId_(deviceExternalId),
+      host_(host),
+      port_(port),
+      lastConnectAttemptAt_(0) {
 }
 
 void MqttPublisher::connect() {
@@ -43,17 +54,25 @@ bool MqttPublisher::publishEnvironment(const EnvironmentReading& reading, const 
     }
 
     if (!client_.connected()) {
-        Serial.println("MQTT desconectado. Nao foi possivel publicar.");
+        Serial.print("[MQTT] connected=false state=");
+        Serial.println(client_.state());
+        Serial.println("[MQTT] publish=skipped reason=mqtt_disconnected");
         return false;
     }
 
+    Serial.print("[MQTT] connected=true host=");
+    Serial.print(host_);
+    Serial.print(" port=");
+    Serial.println(port_);
+
     if (!hasValidSensorValue(reading)) {
-        Serial.println("Nenhum valor sensorial valido para publicar.");
+        Serial.println("[ENV] no_valid_sensor_reading=true");
+        Serial.println("[MQTT] publish=skipped reason=no_valid_sensor_reading");
         return false;
     }
 
     if (measuredAtUtc.empty()) {
-        Serial.println("Horario UTC indisponivel. Publicacao cancelada.");
+        Serial.println("[MQTT] publish=skipped reason=time_unavailable");
         return false;
     }
 
@@ -61,16 +80,32 @@ bool MqttPublisher::publishEnvironment(const EnvironmentReading& reading, const 
     std::string payload = buildEnvironmentPayloadJson(reading, roomSlug_, deviceExternalId_, measuredAtUtc.c_str());
 
     if (payload.empty()) {
-        Serial.println("Payload MQTT invalido. Publicacao cancelada.");
+        Serial.println("[MQTT] publish=skipped reason=payload_empty");
         return false;
     }
 
+    Serial.print("[MQTT] topic=");
+    Serial.println(topic.c_str());
+    Serial.print("[MQTT] payload=");
+    Serial.println(payload.c_str());
+
     bool published = client_.publish(topic.c_str(), payload.c_str());
     if (published) {
-        Serial.print("Payload publicado em ");
-        Serial.println(topic.c_str());
+        Serial.print("[MQTT] publish=success");
+        if (!reading.hasTemperature) {
+            Serial.print(" warning=temperatureCelsius_omitted");
+        }
+        if (!reading.hasHumidity) {
+            Serial.print(" warning=humidityPercentage_omitted");
+        }
+        if (!reading.hasLuminosity) {
+            Serial.print(" warning=luminosityLux_omitted");
+        }
+        Serial.println();
     } else {
-        Serial.println("Falha ao publicar payload MQTT.");
+        Serial.println("[MQTT] publish=failed");
+        Serial.print("[MQTT] state=");
+        Serial.println(client_.state());
     }
 
     return published;
@@ -83,11 +118,20 @@ void MqttPublisher::connectInternal() {
         return;
     }
 
-    Serial.println("Conectando no MQTT...");
+    Serial.print("[MQTT] connect=attempt host=");
+    Serial.print(host_);
+    Serial.print(" port=");
+    Serial.print(port_);
+    Serial.print(" clientId=");
+    Serial.println(deviceExternalId_);
     if (client_.connect(deviceExternalId_)) {
-        Serial.println("MQTT conectado.");
+        Serial.println("[MQTT] connect=success");
     } else {
-        Serial.print("Falha ao conectar no MQTT. Estado: ");
+        Serial.print("[MQTT] connect=failed state=");
         Serial.println(client_.state());
+        Serial.print("[MQTT] connect=failed host=");
+        Serial.print(host_);
+        Serial.print(" port=");
+        Serial.println(port_);
     }
 }

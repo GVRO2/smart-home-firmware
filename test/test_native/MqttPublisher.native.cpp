@@ -4,8 +4,19 @@
 
 #include "MqttMessageBuilder.h"
 
-MqttPublisher::MqttPublisher(IMqttClient& client, const char* roomSlug, const char* deviceExternalId)
-    : client_(client), roomSlug_(roomSlug), deviceExternalId_(deviceExternalId), lastConnectAttemptAt_(0) {
+MqttPublisher::MqttPublisher(
+    IMqttClient& client,
+    const char* roomSlug,
+    const char* deviceExternalId,
+    const char* host,
+    int port
+)
+    : client_(client),
+      roomSlug_(roomSlug),
+      deviceExternalId_(deviceExternalId),
+      host_(host),
+      port_(port),
+      lastConnectAttemptAt_(0) {
 }
 
 void MqttPublisher::connect() {

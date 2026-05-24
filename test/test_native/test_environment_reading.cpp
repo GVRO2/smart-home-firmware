@@ -67,3 +67,18 @@ void shouldRejectReadingWhenHumidityIsBelowMinimum() {
 void shouldRejectReadingWhenHumidityIsAboveMaximum() {
     TEST_ASSERT_FALSE(EnvironmentReading::isValidHumidity(100.1f));
 }
+
+void shouldAcceptReadingWhenLuminosityIsValid() {
+    EnvironmentReading reading;
+
+    TEST_ASSERT_TRUE(EnvironmentReading::isValidLuminosity(123.0f));
+
+    reading.hasLuminosity = EnvironmentReading::isValidLuminosity(123.0f);
+
+    TEST_ASSERT_TRUE(reading.hasAnyValidValue());
+}
+
+void shouldRejectReadingWhenLuminosityIsInvalid() {
+    TEST_ASSERT_FALSE(EnvironmentReading::isValidLuminosity(NAN));
+    TEST_ASSERT_FALSE(EnvironmentReading::isValidLuminosity(-0.1f));
+}

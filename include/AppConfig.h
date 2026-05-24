@@ -8,3 +8,7 @@ constexpr unsigned long PUBLISH_INTERVAL_MS = 5000;
 
 constexpr int DHT_PIN = 4;
 constexpr int DHT_TYPE = 22;
+
+constexpr int I2C_SDA_PIN = 21;
+constexpr int I2C_SCL_PIN = 22;
+constexpr uint8_t BH1750_I2C_ADDRESS = 0x23;

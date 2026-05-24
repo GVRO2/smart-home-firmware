@@ -41,6 +41,10 @@ inline std::string buildEnvironmentPayloadJson(
         document["humidityPercentage"] = reading.humidityPercentage;
     }
 
+    if (reading.hasLuminosity) {
+        document["luminosityLux"] = reading.luminosityLux;
+    }
+
     std::string payload;
     serializeJson(document, payload);
     return payload;
