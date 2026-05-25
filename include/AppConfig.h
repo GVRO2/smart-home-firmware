@@ -6,6 +6,9 @@ constexpr const char* DEVICE_EXTERNAL_ID = "esp32-bedroom-01";
 constexpr unsigned long PUBLISH_INTERVAL_MS = 5000;
 // Para uso real, prefira 30000 ms para reduzir tráfego e leituras desnecessárias.
 
+constexpr int HEARTBEAT_LED_PIN = 2;
+constexpr unsigned long HEARTBEAT_INTERVAL_MS = 1000;
+
 constexpr int DHT_PIN = 4;
 constexpr int DHT_TYPE = 22;
 

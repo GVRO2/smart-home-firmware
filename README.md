@@ -60,7 +60,26 @@ Configuracoes versionadas ficam em `include/AppConfig.h`:
 - `ROOM_SLUG`: sala publicada no payload;
 - `DEVICE_EXTERNAL_ID`: identificador externo do dispositivo;
 - `PUBLISH_INTERVAL_MS`: intervalo de publicacao;
+- `HEARTBEAT_LED_PIN`: pino do LED de vida (padrao GPIO 2);
 - `DHT_PIN`, `I2C_SDA_PIN`, `I2C_SCL_PIN`, `BH1750_I2C_ADDRESS`.
+
+## Boot standalone (sem Serial Monitor)
+
+O firmware nao depende do Serial Monitor para operar. Ao energizar o ESP32:
+
+- inicializa sensores;
+- tenta Wi-Fi com timeout curto e retentativa periodica;
+- tenta MQTT sem travar o loop;
+- tenta sincronizar NTP apenas quando houver Wi-Fi;
+- publica por intervalo de tempo (millis), sem dependencia de evento Serial.
+
+Heartbeat LED (padrao GPIO 2):
+
+- alternancia continua indica loop vivo;
+- 1 piscada curta: boot iniciado;
+- 2 piscadas: Wi-Fi conectado;
+- 3 piscadas: MQTT conectado;
+- 4 piscadas: publish realizado.
 
 ## Payload MQTT
 
@@ -110,18 +129,25 @@ publicacao. Os testes embarcados sao smoke tests para compilacao no ESP32.
 
 ## Logs esperados no Serial Monitor
 
-Inicializacao bem-sucedida do BH1750:
+Eventos principais de boot e conectividade:
 
 ```text
-BH1750 inicializado no endereco I2C 0x23
+[BOOT] firmware_start
+[BOOT] config_loaded
+[WIFI] connect_attempt
+[WIFI] connected ip=...
+[MQTT] connect_attempt host=... port=... clientId=...
+[MQTT] connected
+[SENSOR] bh1750_init=success
+[SENSOR] dht_ready=true
 ```
 
-Falha de inicializacao ou leitura:
+Se houver falhas, o firmware segue vivo e tenta novamente:
 
 ```text
-Falha ao inicializar BH1750 no endereco I2C 0x23
-BH1750 indisponivel. Luminosidade nao sera publicada neste ciclo.
-Leitura BH1750 invalida.
+[WIFI] connect_failed status=...
+[MQTT] connect_failed state=...
+[TIME] ntp_sync_skipped reason=wifi_disconnected
 ```
 
 ## Troubleshooting rapido

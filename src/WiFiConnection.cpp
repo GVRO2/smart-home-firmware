@@ -4,7 +4,8 @@
 
 namespace {
 constexpr unsigned long WIFI_RETRY_INTERVAL_MS = 10000;
-constexpr unsigned long WIFI_CONNECT_TIMEOUT_MS = 20000;
+constexpr unsigned long WIFI_CONNECT_TIMEOUT_MS = 6000;
+constexpr unsigned long WIFI_CONNECT_POLL_MS = 250;
 }
 
 WiFiConnection::WiFiConnection(const char* ssid, const char* password)
@@ -20,7 +21,7 @@ void WiFiConnection::ensureConnected() {
     }
 
     unsigned long now = millis();
-    if (now - lastConnectAttemptAt_ < WIFI_RETRY_INTERVAL_MS) {
+    if (lastConnectAttemptAt_ != 0 && now - lastConnectAttemptAt_ < WIFI_RETRY_INTERVAL_MS) {
         return;
     }
 
@@ -38,22 +39,20 @@ void WiFiConnection::connectInternal() {
         return;
     }
 
-    Serial.println("Conectando no Wi-Fi...");
+    Serial.println("[WIFI] connect_attempt");
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid_, password_);
 
     unsigned long startAt = millis();
     while (WiFi.status() != WL_CONNECTED && millis() - startAt < WIFI_CONNECT_TIMEOUT_MS) {
-        delay(500);
-        Serial.print('.');
+        delay(WIFI_CONNECT_POLL_MS);
     }
-    Serial.println();
 
     if (isConnected()) {
-        Serial.println("Wi-Fi conectado.");
-        Serial.print("IP: ");
+        Serial.print("[WIFI] connected ip=");
         Serial.println(WiFi.localIP());
     } else {
-        Serial.println("Falha ao conectar no Wi-Fi.");
+        Serial.print("[WIFI] connect_failed status=");
+        Serial.println(WiFi.status());
     }
 }

@@ -20,8 +20,25 @@ PubSubMqttClientAdapter mqttClient(MQTT_HOST_VALUE, MQTT_PORT_VALUE);
 MqttPublisher mqttPublisher(mqttClient, ROOM_SLUG, DEVICE_EXTERNAL_ID, MQTT_HOST_VALUE, MQTT_PORT_VALUE);
 
 unsigned long lastPublishAt = 0;
+unsigned long lastHeartbeatAt = 0;
+
+bool heartbeatLedState = false;
+bool wifiWasConnected = false;
+bool mqttWasConnected = false;
+
+int statusBlinkRemainingToggles = 0;
+bool statusBlinkActive = false;
+unsigned long nextStatusBlinkToggleAt = 0;
 
 namespace {
+constexpr unsigned long STATUS_BLINK_ON_MS = 80;
+constexpr unsigned long STATUS_BLINK_OFF_MS = 120;
+constexpr unsigned long STATUS_BLINK_GAP_MS = 240;
+
+bool isStrappingPin(int pin) {
+    return pin == 0 || pin == 2 || pin == 4 || pin == 5 || pin == 12 || pin == 15;
+}
+
 void printHexAddress(uint8_t address) {
     Serial.print("0x");
     if (address < 16) {
@@ -129,29 +146,100 @@ void logEnvironmentReading(const EnvironmentReading& reading, const String& meas
     }
     Serial.println();
 }
+
+void setHeartbeatLed(bool on) {
+    heartbeatLedState = on;
+    digitalWrite(HEARTBEAT_LED_PIN, on ? HIGH : LOW);
+}
+
+void beginStatusBlink(int blinkCount) {
+    if (blinkCount <= 0) {
+        return;
+    }
+
+    statusBlinkRemainingToggles = blinkCount * 2;
+    statusBlinkActive = true;
+    nextStatusBlinkToggleAt = millis();
+}
+
+void processStatusBlink(unsigned long now) {
+    if (!statusBlinkActive || now < nextStatusBlinkToggleAt) {
+        return;
+    }
+
+    setHeartbeatLed(!heartbeatLedState);
+    statusBlinkRemainingToggles--;
+
+    if (statusBlinkRemainingToggles <= 0) {
+        statusBlinkActive = false;
+        setHeartbeatLed(false);
+        nextStatusBlinkToggleAt = now + STATUS_BLINK_GAP_MS;
+        return;
+    }
+
+    nextStatusBlinkToggleAt = now + (heartbeatLedState ? STATUS_BLINK_ON_MS : STATUS_BLINK_OFF_MS);
+}
+
+void processHeartbeat(unsigned long now) {
+    if (statusBlinkActive) {
+        processStatusBlink(now);
+        return;
+    }
+
+    if (now - lastHeartbeatAt < HEARTBEAT_INTERVAL_MS) {
+        return;
+    }
+
+    lastHeartbeatAt = now;
+    setHeartbeatLed(!heartbeatLedState);
+}
 }
 
 void setup() {
+    pinMode(HEARTBEAT_LED_PIN, OUTPUT);
+    setHeartbeatLed(false);
+
     Serial.begin(115200);
     delay(1000);
 
-    Serial.println("Iniciando Home AI Room Observer ESP32...");
+    Serial.println("[BOOT] firmware_start");
+    Serial.println("[BOOT] config_loaded");
+    if (isStrappingPin(DHT_PIN)) {
+        Serial.print("[BOOT] warning=dht_pin_is_strapping pin=");
+        Serial.println(DHT_PIN);
+    }
     logBootConfig();
+    beginStatusBlink(1);
 
     environmentSensor.begin();
+    Serial.println("[SENSOR] dht_ready=true");
     lightSensor.begin();
-    wifiConnection.connect();
-    timeProvider.sync();
-    mqttPublisher.connect();
+    Serial.print("[SENSOR] bh1750_init=");
+    Serial.println(lightSensor.isReady() ? "success" : "failed");
 }
 
 void loop() {
+    unsigned long now = millis();
+    processHeartbeat(now);
+
     wifiConnection.ensureConnected();
+    bool wifiConnected = wifiConnection.isConnected();
+    if (wifiConnected && !wifiWasConnected) {
+        beginStatusBlink(2);
+    }
+    wifiWasConnected = wifiConnected;
+
     timeProvider.ensureSynced();
+
     mqttPublisher.ensureConnected();
+    bool mqttConnected = mqttClient.connected();
+    if (mqttConnected && !mqttWasConnected) {
+        beginStatusBlink(3);
+    }
+    mqttWasConnected = mqttConnected;
+
     mqttPublisher.loop();
 
-    unsigned long now = millis();
     if (now - lastPublishAt < PUBLISH_INTERVAL_MS) {
         return;
     }
@@ -163,5 +251,8 @@ void loop() {
     String measuredAt = timeProvider.nowIsoUtc();
 
     logEnvironmentReading(reading, measuredAt);
-    mqttPublisher.publishEnvironment(reading, std::string(measuredAt.c_str()));
+    bool published = mqttPublisher.publishEnvironment(reading, std::string(measuredAt.c_str()));
+    if (published) {
+        beginStatusBlink(4);
+    }
 }

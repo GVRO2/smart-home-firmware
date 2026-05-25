@@ -35,7 +35,7 @@ void MqttPublisher::ensureConnected() {
     }
 
     unsigned long now = millis();
-    if (now - lastConnectAttemptAt_ < MQTT_RETRY_INTERVAL_MS) {
+    if (lastConnectAttemptAt_ != 0 && now - lastConnectAttemptAt_ < MQTT_RETRY_INTERVAL_MS) {
         return;
     }
 
@@ -118,18 +118,18 @@ void MqttPublisher::connectInternal() {
         return;
     }
 
-    Serial.print("[MQTT] connect=attempt host=");
+    Serial.print("[MQTT] connect_attempt host=");
     Serial.print(host_);
     Serial.print(" port=");
     Serial.print(port_);
     Serial.print(" clientId=");
     Serial.println(deviceExternalId_);
     if (client_.connect(deviceExternalId_)) {
-        Serial.println("[MQTT] connect=success");
+        Serial.println("[MQTT] connected");
     } else {
-        Serial.print("[MQTT] connect=failed state=");
+        Serial.print("[MQTT] connect_failed state=");
         Serial.println(client_.state());
-        Serial.print("[MQTT] connect=failed host=");
+        Serial.print("[MQTT] connect_failed host=");
         Serial.print(host_);
         Serial.print(" port=");
         Serial.println(port_);

@@ -1,12 +1,14 @@
 #include "TimeProvider.h"
 
 #include <time.h>
+#include <WiFi.h>
 
 #include "TimeFormatting.h"
 
 namespace {
 constexpr unsigned long NTP_RETRY_INTERVAL_MS = 60000;
-constexpr unsigned long NTP_WAIT_TIMEOUT_MS = 15000;
+constexpr unsigned long NTP_WAIT_TIMEOUT_MS = 4000;
+constexpr unsigned long NTP_WAIT_POLL_MS = 250;
 constexpr time_t MIN_VALID_UTC = 1700000000;
 }
 
@@ -16,19 +18,25 @@ TimeProvider::TimeProvider()
 void TimeProvider::sync() {
     lastSyncAttemptAt_ = millis();
 
-    Serial.println("Sincronizando horario NTP...");
+    if (WiFi.status() != WL_CONNECTED) {
+        isReady_ = false;
+        Serial.println("[TIME] ntp_sync_skipped reason=wifi_disconnected");
+        return;
+    }
+
+    Serial.println("[TIME] ntp_sync_attempt");
     configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 
     unsigned long startAt = millis();
     while (!hasValidTime() && millis() - startAt < NTP_WAIT_TIMEOUT_MS) {
-        delay(500);
+        delay(NTP_WAIT_POLL_MS);
     }
 
     isReady_ = hasValidTime();
     if (isReady_) {
-        Serial.println("Horario NTP sincronizado.");
+        Serial.println("[TIME] ntp_synced=true");
     } else {
-        Serial.println("Falha ao sincronizar NTP.");
+        Serial.println("[TIME] ntp_synced=false");
     }
 }
 
@@ -39,7 +47,7 @@ void TimeProvider::ensureSynced() {
     }
 
     unsigned long now = millis();
-    if (now - lastSyncAttemptAt_ < NTP_RETRY_INTERVAL_MS) {
+    if (lastSyncAttemptAt_ != 0 && now - lastSyncAttemptAt_ < NTP_RETRY_INTERVAL_MS) {
         return;
     }
 
