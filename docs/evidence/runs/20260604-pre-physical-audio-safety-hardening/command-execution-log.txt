@@ -1,0 +1,52 @@
+================================================================================
+Command Execution Log - 2026-06-04
+================================================================================
+
+1. Run check-pin-collision.ps1
+Command: powershell -ExecutionPolicy Bypass -File scripts/quality/check-pin-collision.ps1
+Output:
+Running global safety scan for dangerous patterns...
+PIN_MAPPING_VALIDATED
+Exit Code: 0
+
+2. Run check-native-tests.ps1 (platformio test -e native wrapper)
+Command: powershell -ExecutionPolicy Bypass -File scripts/quality/check-native-tests.ps1
+Output:
+UNITY_TEST_HARNESS_PASSED
+test\test_native\test_mqtt_contract.cpp:782-839 [PASSED]
+58 test cases: 58 succeeded in 00:00:01.659
+FIRMWARE_NATIVE_TESTS_PASSED
+Exit Code: 0
+
+3. Run check-firmware-contract.ps1
+Command: powershell -ExecutionPolicy Bypass -File scripts/quality/check-firmware-contract.ps1
+Output:
+FIRMWARE_CONTRACT_GATE_PASSED
+Exit Code: 0
+
+4. Run check-audio-docs-consistency.ps1
+Command: powershell -ExecutionPolicy Bypass -File scripts/quality/check-audio-docs-consistency.ps1
+Output:
+FIRMWARE_AUDIO_DOCS_CONSISTENCY_PASSED
+Exit Code: 0
+
+5. Run run-firmware-approval-review.ps1
+Command: powershell -ExecutionPolicy Bypass -File scripts/governance/run-firmware-approval-review.ps1 -Mode automatic
+Output:
+FIRMWARE_CONTRACT_GATE_PASSED
+PIN_MAPPING_VALIDATED
+FIRMWARE_AUDIO_CONTRACT_GATE_PASSED
+FIRMWARE_AUDIO_SECURITY_GATE_PASSED
+FIRMWARE_AUDIO_DOCS_CONSISTENCY_PASSED
+FIRMWARE_DOCS_CONSISTENCY_PASSED
+FIRMWARE_SECRETS_GATE_PASSED_WITH_WARNINGS
+FIRMWARE_MOCK_MQTT_CONTRACT_GATE_PASSED
+FIRMWARE_HARDWARE_ABSTRACTIONS_GATE_PASSED
+FIRMWARE_PHYSICAL_VALIDATION_POLICY_GATE_PASSED
+FIRMWARE_APPROVAL_REVIEW_PASSED_WITH_WARNINGS
+Exit Code: 0
+
+================================================================================
+Backend Verification
+================================================================================
+Backend not affected by this final safety hardening.

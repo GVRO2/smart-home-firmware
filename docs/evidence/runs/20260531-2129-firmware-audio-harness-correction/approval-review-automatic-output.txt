@@ -1,0 +1,21 @@
+﻿Source: docs/evidence/runs/20260531-2128-firmware-approval-review-automatic
+Mode: automatic
+Status: FIRMWARE_APPROVAL_REVIEW_PASSED_WITH_WARNINGS
+Warning: include/Secrets.h exists locally and is acceptable only because it is untracked/ignored.
+
+Automatic approval gates executed:
+- check-unreachable-unity-tests
+- check-native-tests
+- check-audio-status-tests
+- check-firmware-build
+- check-firmware-contract
+- check-audio-contract
+- check-audio-security
+- check-audio-docs-consistency
+- check-firmware-docs-consistency
+- check-secrets
+- check-mock-mqtt-contract
+- check-hardware-abstractions
+- check-physical-validation-policy
+
+Note: A later same-minute tee capture reached the same approval status but hit a PowerShell file-lock while writing a duplicate build output path. This evidence file uses the clean 20260531-2128 approval run instead of treating that lock as a firmware failure.

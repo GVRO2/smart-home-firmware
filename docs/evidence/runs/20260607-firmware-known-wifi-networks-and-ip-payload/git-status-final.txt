@@ -1,0 +1,89 @@
+Git Status - Short Format
+
+Modified Files (M):
+ M include/AppConfig.h
+ M include/Bh1750LightSensor.h
+ M include/DhtEnvironmentSensor.h
+ M include/EnvironmentReading.h
+ M include/IMqttClient.h
+ M include/MqttMessageBuilder.h
+ M include/MqttPublisher.h
+ M include/PubSubMqttClientAdapter.h
+ M include/Secrets.h.example
+ M include/WiFiConnection.h
+ M src/MqttPublisher.cpp
+ M src/PubSubMqttClientAdapter.cpp
+ M src/WiFiConnection.cpp
+ M src/main.cpp
+ M test/test_native/MqttPublisher.native.cpp
+ M test/test_native/test_environment_reading.cpp
+ M test/test_native/test_mqtt_contract.cpp
+
+Untracked Files (??):
+?? .idea/
+?? compile_commands.json
+?? docs/architecture/
+?? docs/audit/
+?? docs/backlog/
+?? docs/decisions/
+?? docs/evidence/
+?? docs/governance/
+?? docs/prompts/
+?? docs/sdd/
+?? docs/squad/
+?? docs/testing/
+?? governance-kit.yaml
+?? include/AudioCommand.h
+?? include/AudioCommandParser.h
+?? include/AudioCommandSource.h
+?? include/AudioConfig.h
+?? include/AudioOutputDriver.h
+?? include/AudioPlaybackQueue.h
+?? include/AudioPlaybackService.h
+?? include/AudioStatusPublisher.h
+?? include/AudioStatusSink.h
+?? include/ClockProvider.h
+?? include/EnvironmentSensor.h
+?? include/GpioPresenceSensor.h
+?? include/I2sAudioOutputDriver.h
+?? include/KnownWifiNetworkProvider.h
+?? include/LightSensor.h
+?? include/MqttPublisherPort.h
+?? include/NetworkAddressProvider.h
+?? include/NetworkConnection.h
+?? include/PresenceReading.h
+?? include/PresenceSensor.h
+?? include/WavPcmAudio.h
+?? include/mocks/
+?? payload-audio-url.json
+?? scripts/dev/
+?? scripts/governance/
+?? scripts/quality/
+?? src/AudioCommandParser.cpp
+?? src/AudioPlaybackQueue.cpp
+?? src/AudioPlaybackService.cpp
+?? src/AudioStatusPublisher.cpp
+?? src/GpioPresenceSensor.cpp
+?? src/I2sAudioOutputDriver.cpp
+?? src/KnownWifiNetworkProvider.cpp
+?? src/NetworkAddressProvider.cpp
+?? test/test_native/test_pin_collision.cpp
+
+Note: Many untracked files are from previous work on the project and are not part of this task.
+The following files were created/modified specifically for this task:
+
+Created for this task:
+- include/KnownWifiNetworkProvider.h
+- src/KnownWifiNetworkProvider.cpp
+- include/NetworkAddressProvider.h
+- src/NetworkAddressProvider.cpp
+
+Modified for this task:
+- include/Secrets.h.example
+- include/WiFiConnection.h
+- src/WiFiConnection.cpp
+- include/MqttMessageBuilder.h
+- include/MqttPublisher.h
+- src/MqttPublisher.cpp
+- src/main.cpp
+- test/test_native/test_mqtt_contract.cpp

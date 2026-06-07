@@ -1,0 +1,23 @@
+# Files Created
+
+- `include/AudioConfig.h`
+- `include/AudioCommand.h`
+- `include/AudioCommandParser.h`
+- `include/AudioPlaybackQueue.h`
+- `include/AudioOutputDriver.h`
+- `include/I2sAudioOutputDriver.h`
+- `include/AudioStatusPublisher.h`
+- `include/AudioPlaybackService.h`
+- `src/AudioCommandParser.cpp`
+- `src/AudioPlaybackQueue.cpp`
+- `src/I2sAudioOutputDriver.cpp`
+- `src/AudioStatusPublisher.cpp`
+- `src/AudioPlaybackService.cpp`
+- `scripts/quality/check-audio-contract.ps1`
+- `scripts/quality/check-audio-docs-consistency.ps1`
+- `scripts/quality/check-audio-security.ps1`
+- `scripts/quality/check-audio-build-compatibility.ps1`
+- `docs/decisions/ADR-0004-audio-output-local-ai-communication.md`
+- `docs/prompts/backend-audio-contract-implementation-agent.md`
+- `docs/evidence/runs/20260531-2100-firmware-audio-streaming/*`
+- `docs/audit/tmp/firmware-audio-streaming-implementation-report.md`

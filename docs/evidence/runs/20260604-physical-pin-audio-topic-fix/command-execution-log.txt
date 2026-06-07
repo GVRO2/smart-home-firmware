@@ -1,0 +1,26 @@
+Command Execution Log - 2026-06-04
+
+1. Native test verification command (Firmware):
+Command: C:\Users\KABUM\.platformio\penv\Scripts\platformio.exe test -e native
+Cwd: c:\Users\KABUM\IdeaProjects\home-ai-room-observer-esp32
+Result: SUCCESS (58/58 test cases passed)
+
+2. Quality Gate Contract check command (Firmware):
+Command: powershell -ExecutionPolicy Bypass -File scripts/quality/check-firmware-contract.ps1
+Cwd: c:\Users\KABUM\IdeaProjects\home-ai-room-observer-esp32
+Result: SUCCESS (FIRMWARE_CONTRACT_GATE_PASSED)
+
+3. Quality Gate Native tests check command (Firmware):
+Command: powershell -ExecutionPolicy Bypass -File scripts/quality/check-native-tests.ps1
+Cwd: c:\Users\KABUM\IdeaProjects\home-ai-room-observer-esp32
+Result: SUCCESS (FIRMWARE_NATIVE_TESTS_PASSED)
+
+4. Approval Review command (Firmware):
+Command: powershell -ExecutionPolicy Bypass -File scripts/governance/run-firmware-approval-review.ps1 -Mode automatic
+Cwd: c:\Users\KABUM\IdeaProjects\home-ai-room-observer-esp32
+Result: SUCCESS (FIRMWARE_APPROVAL_REVIEW_PASSED_WITH_WARNINGS)
+
+5. Maven build & test verify command (Backend):
+Command: powershell -ExecutionPolicy Bypass -Command ".\mvnw.cmd clean verify"
+Cwd: C:\Users\KABUM\IdeaProjects\smart-home
+Result: SUCCESS (BUILD SUCCESS, 193 unit tests and 45 integration tests passed)

@@ -1,0 +1,41 @@
+Audio Capability Audit and Classification - 2026-06-04
+
+We have audited the audio capabilities of the Home AI Room Observer ESP32 firmware and backend integration. Below is the official classification for each capability:
+
+1. PLAY_TONE
+   - Classification: IMPLEMENTED_NOT_PHYSICALLY_VALIDATED
+   - Rationale: Generator for sine wave tones in runtime using I2S DMA is fully coded in I2sAudioOutputDriver.cpp and verified via native unit tests. However, physical playback on a real MAX98357A speaker has not been executed/evidenced in this run.
+
+2. PLAY_NOTIFICATION
+   - Classification: NOT_FOUND
+   - Rationale: No code exists for playing pre-recorded audio files from flash memory or SPIFFS local storage.
+
+3. PLAY_URL
+   - Classification: STUB_ONLY
+   - Rationale: Parser and policy rules for local/private network HTTP URLs are implemented and tested, but the actual HTTP downloader and WAV/MP3 decoding logic are stubs in I2sAudioOutputDriver.cpp which return 'failed' status to MQTT.
+
+4. STREAM
+   - Classification: STUB_ONLY
+   - Rationale: Parser and local network stream link validation are implemented, but real-time stream buffering and decoding are stubs returning 'failed'.
+
+5. TTS
+   - Classification: NOT_FOUND
+   - Rationale: Text-to-Speech is outside the scope of this POC. No TTS engine exists in the firmware.
+
+6. STOP_AUDIO
+   - Classification: IMPLEMENTED_NOT_PHYSICALLY_VALIDATED
+   - Rationale: Playback service queues, interruptions, and stop commands are fully coded and covered by native unit tests, but not physically validated on hardware.
+
+7. SET_VOLUME
+   - Classification: IMPLEMENTED_NOT_PHYSICALLY_VALIDATED
+   - Rationale: Volume boundaries (0-100) and scale mappings are fully implemented and verified via unit tests, but not physically validated on hardware.
+
+8. AUDIO_STATUS
+   - Classification: IMPLEMENTED_NOT_PHYSICALLY_VALIDATED
+   - Rationale: MQTT reporting of states (accepted, playing, completed, stopped, rejected, failed) is implemented in AudioStatusPublisher.cpp and validated via native tests, but not physically verified with a real broker/device.
+
+Rules enforced:
+- PLAY_TONE is not marked as REAL_ON_HARDWARE since physical tests were not authorized/run.
+- PLAY_URL and STREAM are strictly marked as STUB_ONLY because they lack real decoders.
+- TTS is marked as NOT_FOUND.
+- MQTT does not transport audio files (only JSON commands).

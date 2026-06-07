@@ -1,0 +1,36 @@
+================================================================================
+Audio Boot Safety Validation - 2026-06-04
+================================================================================
+
+1. Firmware Code Audit (Boot Safety):
+   - The setup() function in src/main.cpp was inspected:
+     - It calls `audioPlaybackService.begin();` which initializes I2sAudioOutputDriver.
+     - `I2sAudioOutputDriver::begin()` only allocates the I2S driver and sets up the GPIO pins.
+     - No audio playback API (such as `startTone()`) is called during initialization or boot sequence.
+   - The loop() function in src/main.cpp was inspected:
+     - It calls `audioPlaybackService.loop(...)` which processes the active playback queue.
+     - The playback queue is empty on boot.
+     - No automatic tone or stream is enqueued on boot.
+     - Playback is ONLY started when a message is received on the MQTT audio command topic (`home/bedroom/esp32-bedroom-01/audio/command`), parsed successfully by `AudioCommandParser`, and submitted to `AudioPlaybackService`.
+
+2. Default Configuration (AUDIO_PLAYBACK_ENABLED):
+   - `AUDIO_PLAYBACK_ENABLED = true` in include/AppConfig.h.
+   - Since the boot sequence is completely silent and requires explicit MQTT commands, this configuration is SAFE for physical testing.
+
+3. Secure Physical Boot Procedure:
+   - When powering on the ESP32 for the first physical audio test:
+     1. Set up the ESP32 DevKit V1 and wire the MAX98357A:
+        - VIN -> 5V/VIN
+        - GND -> GND
+        - BCLK -> GPIO 26
+        - LRC/WS -> GPIO 25
+        - DIN -> GPIO 33
+        - SD -> Leave disconnected (do not connect to any pin)
+        - SPK+ and SPK- -> Connect to speaker (do not tie SPK- to GND)
+     2. Power up the ESP32 (via USB or external 5V source).
+     3. Observe the Serial Monitor output. The boot log should print:
+        - `[BOOT] config_loaded`
+        - `[CONFIG] audioEnabled=true`
+        - `[AUDIO] i2s_init=success`
+     4. The speaker MUST remain completely silent.
+     5. The firmware will wait for a command. Only after publishing a valid command to the MQTT topic `home/bedroom/esp32-bedroom-01/audio/command` (e.g. `play_tone`) will the audio output driver play sound.

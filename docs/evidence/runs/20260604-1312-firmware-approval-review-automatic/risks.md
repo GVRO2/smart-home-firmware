@@ -1,0 +1,1 @@
+﻿No gate failures recorded.

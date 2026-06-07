@@ -1,0 +1,10 @@
+{
+  "type": "play_audio_url",
+  "audioUrl": "http://192.168.1.200:8089/test-001.wav",
+  "format": "wav",
+  "encoding": "pcm_s16le",
+  "sampleRateHz": 16000,
+  "channels": 1,
+  "volume": 20,
+  "requestId": "audio-url-test-001"
+}

@@ -1,0 +1,15 @@
+[MODIFY] include/AppConfig.h
+[MODIFY] scripts/quality/check-firmware-contract.ps1
+[MODIFY] scripts/quality/check-audio-docs-consistency.ps1
+[MODIFY] docs/architecture/firmware-hardware-wiring.md
+[MODIFY] docs/sdd/firmware-sdd.md
+[MODIFY] docs/squad/firmware-agent-memory.md
+[NEW]    test/test_native/test_pin_collision.cpp
+[MODIFY] test/test_native/test_mqtt_contract.cpp
+[NEW]    scripts/quality/check-pin-collision.ps1
+[MODIFY] scripts/governance/run-firmware-approval-review.ps1
+[MODIFY] C:/Users/KABUM/IdeaProjects/smart-home/src/main/resources/application.yml
+[MODIFY] C:/Users/KABUM/IdeaProjects/smart-home/src/main/java/br/com/homeai/roomobserver/interfaces/rest/config/HomeBrainProperties.java
+[MODIFY] C:/Users/KABUM/IdeaProjects/smart-home/src/main/java/br/com/homeai/roomobserver/application/usecase/HomeBrainSettings.java
+[MODIFY] C:/Users/KABUM/IdeaProjects/smart-home/src/test/java/br/com/homeai/roomobserver/interfaces/rest/config/HomeBrainPropertiesTest.java
+[MODIFY] C:/Users/KABUM/IdeaProjects/smart-home/src/test/java/br/com/homeai/roomobserver/application/usecase/AudioPublisherTest.java

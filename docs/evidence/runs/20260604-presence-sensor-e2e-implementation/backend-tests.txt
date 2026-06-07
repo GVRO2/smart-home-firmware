@@ -1,0 +1,24 @@
+Backend Tests Log
+=================
+Date: 2026-06-04
+
+Test Environment: Spring Boot Test with JUnit 5 & Testcontainers
+Command: .\mvnw.cmd clean verify
+
+Test Execution Results:
+1. MqttEnvironmentPayloadParserTest - Validates parsing and optionality rules for presenceDetected:
+   - shouldParseValidPayloadWithPresenceDetectedTrue [PASSED]
+   - shouldParseValidPayloadWithPresenceDetectedFalse [PASSED]
+   - shouldParseValidPayloadWithoutPresenceDetected [PASSED]
+   - shouldRejectPayloadWithInvalidPresenceDetectedType [PASSED]
+2. MqttEnvironmentConsumerAdapterTest - Validates command extraction and use case execution [PASSED]
+3. MeasurementPersistenceMapperTest - Validates entity mapping and domain persistence [PASSED]
+4. MeasurementRestMapperTest - Validates REST payload serialization [PASSED]
+5. MqttBackendPipelineIT - Full pipeline integration test:
+   - shouldPersistMeasurementWhenMessageIsPublishedToBroker (tests presenceDetected=true) [PASSED]
+   - shouldPersistMeasurementWhenLegacyPayloadIsPublishedWithoutPresence [PASSED]
+   - shouldRejectInvalidPayloadWhenMessageIsPublishedToBroker [PASSED]
+   - shouldHandleDuplicatePayloadIdempotentlyWhenMessageIsPublishedMultipleTimes [PASSED]
+
+Total Tests Run: 46 integration tests + unit test suites.
+Result: SUCCESS (BUILD SUCCESS)

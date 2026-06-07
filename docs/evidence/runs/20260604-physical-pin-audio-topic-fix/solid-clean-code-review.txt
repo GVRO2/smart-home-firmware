@@ -1,0 +1,27 @@
+SOLID and Clean Code Review - 2026-06-04
+Status: PASSED
+
+1. Single Responsibility Principle (SRP)
+   - Configuration constants remain isolated in `AppConfig.h`.
+   - The new `check-pin-collision.ps1` script has the single responsibility of verifying pin mapping boundaries and doc alignment.
+   - `test_pin_collision.cpp` contains only unit tests validating pin assertions, keeping it separate from the MQTT protocol tests.
+   - SRP is fully respected.
+
+2. Open/Closed Principle (OCP)
+   - Pin collision checks are implemented as central, pluggable validation steps (both in native unit tests and as a PowerShell quality gate) without introducing runtime conditional logic (`if` statements) inside the main firmware execution flow.
+   - New sensor mappings can be added simply by adding a new variable to `AppConfig.h` and the check scripts.
+
+3. Liskov Substitution Principle (LSP)
+   - Abstractions like `AudioOutputDriver` and `IMqttClient` were not modified. Mocks (`MockAudioOutputDriver`, `FakeMqttClient`) continue to behave as drop-in replacements for hardware drivers in native tests without contract modifications.
+
+4. Interface Segregation Principle (ISP)
+   - Interface contracts for sensors and audio remain highly focused and small. We did not inflate interface APIs.
+
+5. Dependency Inversion Principle (DIP)
+   - Firmware high-level drivers and services (like `AudioPlaybackService` and `MqttPublisher`) depend on abstract interface definitions (`AudioOutputDriver`, `IMqttClient`), maintaining decoupling from specific hardware configurations or pins.
+
+6. Clean Code
+   - Meaningful, self-documenting naming conventions are utilized (e.g., `PRESENCE_SENSOR_PIN`, `shouldBeCollisionFreeAndSafe`).
+   - Magic numbers are eliminated; all pins are mapped to centralized `constexpr int` constants.
+   - Documentation and code assertions are perfectly synchronized, avoiding drift.
+   - Statuses are kept accurate, classifying stubs as `STUB_ONLY` instead of claiming full implementation.

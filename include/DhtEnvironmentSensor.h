@@ -3,14 +3,15 @@
 #include <Arduino.h>
 #include <DHT.h>
 
+#include "EnvironmentSensor.h"
 #include "EnvironmentReading.h"
 
-class DhtEnvironmentSensor {
+class DhtEnvironmentSensor : public EnvironmentSensor {
 public:
     explicit DhtEnvironmentSensor(int pin);
 
-    void begin();
-    EnvironmentReading read();
+    void begin() override;
+    EnvironmentReading read() override;
 
 private:
     DHT dht_;

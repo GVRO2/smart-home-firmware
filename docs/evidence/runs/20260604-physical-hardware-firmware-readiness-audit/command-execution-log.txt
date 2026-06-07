@@ -1,0 +1,4 @@
+- pio test -e native (failed due to path, resolved below)
+- powershell -ExecutionPolicy Bypass -File scripts/quality/check-firmware-contract.ps1
+- powershell -ExecutionPolicy Bypass -File scripts/quality/check-native-tests.ps1
+- powershell -ExecutionPolicy Bypass -File scripts/governance/run-firmware-approval-review.ps1

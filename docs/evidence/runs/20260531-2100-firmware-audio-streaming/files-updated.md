@@ -1,0 +1,22 @@
+# Files Updated
+
+- `include/AppConfig.h`
+- `include/IMqttClient.h`
+- `include/PubSubMqttClientAdapter.h`
+- `include/MqttPublisher.h`
+- `src/PubSubMqttClientAdapter.cpp`
+- `src/MqttPublisher.cpp`
+- `src/main.cpp`
+- `test/test_native/MqttPublisher.native.cpp`
+- `test/test_native/test_mqtt_contract.cpp`
+- `scripts/quality/check-firmware-contract.ps1`
+- `scripts/governance/run-firmware-approval-review.ps1`
+- `docs/sdd/firmware-sdd.md`
+- `docs/architecture/firmware-architecture.md`
+- `docs/architecture/firmware-data-flow.md`
+- `docs/architecture/firmware-hardware-wiring.md`
+- `docs/architecture/firmware-security.md`
+- `docs/backlog/firmware-backlog.md`
+- `docs/squad/firmware-agent-memory.md`
+- `docs/governance/quality-gates.md`
+- `docs/governance/release-readiness.md`

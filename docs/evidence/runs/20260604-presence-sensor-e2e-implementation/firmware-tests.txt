@@ -1,0 +1,32 @@
+Firmware Tests Log
+==================
+Date: 2026-06-04
+
+Test Environment: PlatformIO Native Runner
+Command: C:\Users\KABUM\.platformio\penv\Scripts\platformio.exe test -e native
+
+Test Cases:
+1. shouldAcceptReadingWhenTemperatureAndHumidityAreValid [PASSED]
+2. shouldAcceptReadingWhenOnlyTemperatureIsValid [PASSED]
+3. shouldAcceptReadingWhenOnlyHumidityIsValid [PASSED]
+4. shouldRejectReadingWhenAllSensorValuesAreInvalid [PASSED]
+5. shouldRejectReadingWhenTemperatureIsBelowMinimum [PASSED]
+6. shouldRejectReadingWhenTemperatureIsAboveMaximum [PASSED]
+7. shouldRejectReadingWhenHumidityIsBelowMinimum [PASSED]
+8. shouldRejectReadingWhenHumidityIsAboveMaximum [PASSED]
+9. shouldAcceptReadingWhenLuminosityIsValid [PASSED]
+10. shouldRejectReadingWhenLuminosityIsInvalid [PASSED]
+11. shouldAcceptReadingWhenPresenceIsValid [PASSED]
+12. shouldAcceptReadingWhenPresenceIsFalse [PASSED]
+13. shouldBuildOfficialMqttTopicWhenRoomAndDeviceAreProvided [PASSED]
+14. shouldNotUseDeprecatedMqttTopicFormat [PASSED]
+15. shouldBuildPayloadWhenTemperatureAndHumidityAreValid [PASSED]
+16. shouldBuildPayloadWithLuminosityWhenLightReadingIsValid [PASSED]
+17. shouldOmitLuminosityWhenLightReadingIsInvalid [PASSED]
+18. shouldBuildPayloadWithPresenceTrueWhenPresenceDetectedIsNotNull [PASSED]
+19. shouldBuildPayloadWithPresenceFalseWhenPresenceDetectedIsNotNull [PASSED]
+20. shouldOmitPresenceWhenPresenceIsAbsent [PASSED]
+...
+Total 63 unit test cases executed.
+Result: 63 succeeded, 0 failed.
+FIRMWARE_NATIVE_TESTS_PASSED

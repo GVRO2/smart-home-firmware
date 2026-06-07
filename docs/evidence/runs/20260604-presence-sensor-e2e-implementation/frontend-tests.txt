@@ -1,0 +1,24 @@
+Frontend Tests Log
+==================
+Date: 2026-06-04
+
+Test Environment: Vitest v4.1.8 & Playwright e2e
+Command: npm run gates
+
+Vitest execution summary:
+- src/api/authTokenStore.test.ts [PASSED] (2 tests)
+- src/features/dashboard/useDashboardData.test.tsx [PASSED] (1 test)
+- src/components/dashboard/RoomHealthCard.test.tsx [PASSED] (4 tests)
+  - renders presence detected state when presenceDetected is true [PASSED]
+  - renders no presence state when presenceDetected is false [PASSED]
+  - renders presence not informed state when presenceDetected is null or undefined [PASSED]
+  - does not break when presenceDetected is completely absent from the payload [PASSED]
+- src/components/auth/ProtectedRoute.test.tsx [PASSED] (2 tests)
+- src/components/dashboard/DashboardComponents.test.tsx [PASSED] (3 tests)
+- src/components/ui/UiStates.test.tsx [PASSED] (4 tests)
+- src/app/App.test.tsx [PASSED] (3 tests)
+
+Total Tests Run: 19 passed.
+Coverage: Enabled via V8.
+Build Result: SUCCESS (tsc -b && vite build)
+Bundle budget validation check: FRONTEND_BUNDLE_BUDGET_PASSED

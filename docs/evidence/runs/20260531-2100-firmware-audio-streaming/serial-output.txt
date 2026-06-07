@@ -1,0 +1,3 @@
+BLOCKED_BY_MISSING_HARDWARE
+
+Serial monitor was not executed in this run. No physical boot, I2S init, tone audibility, brownout, reboot, or sensor runtime evidence is claimed.

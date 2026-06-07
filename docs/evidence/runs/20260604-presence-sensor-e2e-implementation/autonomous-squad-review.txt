@@ -1,0 +1,38 @@
+Autonomous Squad Review Log
+===========================
+Date: 2026-06-04
+
+Roles Involved & Verification:
+
+1. Firmware Engineer:
+   - Configured GPIO27 as input.
+   - Handled non-blocking digitalRead.
+   - Guarded audio system to prevent active automatic playback from presence readings.
+   - Status: APPROVED
+
+2. Backend Engineer:
+   - Updated MQTT payload parsing and validation contract.
+   - Added DB Liquibase migration.
+   - Propagated to domain model and REST DTOs.
+   - Status: APPROVED
+
+3. Frontend Engineer:
+   - Updated RoomHealthCard, RoomCard, and LatestMeasurementCard.
+   - Correctly handles True, False, and Null/Absent presence states.
+   - Status: APPROVED
+
+4. QA/Test Engineer:
+   - Created native tests for firmware presence logic.
+   - Created unit tests for backend MQTT parse validation.
+   - Created integration tests in MqttBackendPipelineIT (legacy + presence).
+   - Created unit tests for React components verifying all presence render scenarios.
+   - Status: APPROVED
+
+5. Architecture Reviewer:
+   - Confirmed no JPA entities leak to REST controllers.
+   - Verified strict package boundaries.
+   - Status: APPROVED
+
+6. Governance/Evidence Steward:
+   - Generated E2E audit validation logs and artifacts.
+   - Status: APPROVED

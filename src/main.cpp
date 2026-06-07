@@ -1,23 +1,42 @@
 #include <Arduino.h>
 
 #include "AppConfig.h"
+#include "AudioCommandParser.h"
+#include "AudioConfig.h"
+#include "AudioPlaybackQueue.h"
+#include "AudioPlaybackService.h"
+#include "AudioStatusPublisher.h"
 #include "Bh1750LightSensor.h"
 #include "DhtEnvironmentSensor.h"
+#include "GpioPresenceSensor.h"
+#include "I2sAudioOutputDriver.h"
+#include "KnownWifiNetworkProvider.h"
 #include "MqttMessageBuilder.h"
 #include "MqttPublisher.h"
+#include "NetworkAddressProvider.h"
 #include "PubSubMqttClientAdapter.h"
 #include "Secrets.h"
 #include "TimeProvider.h"
 #include "WiFiConnection.h"
+#include <ArduinoJson.h>
 #include <WiFi.h>
 #include <string>
 
-WiFiConnection wifiConnection(WIFI_SSID_VALUE, WIFI_PASSWORD_VALUE);
+KnownWifiNetworkProvider knownWifiNetworkProvider;
+WiFiConnection wifiConnection(knownWifiNetworkProvider);
+NetworkAddressProvider networkAddressProvider;
 TimeProvider timeProvider;
 DhtEnvironmentSensor environmentSensor(DHT_PIN);
 Bh1750LightSensor lightSensor(BH1750_I2C_ADDRESS, I2C_SDA_PIN, I2C_SCL_PIN);
+GpioPresenceSensor presenceSensor(PRESENCE_SENSOR_PIN);
 PubSubMqttClientAdapter mqttClient(MQTT_HOST_VALUE, MQTT_PORT_VALUE);
 MqttPublisher mqttPublisher(mqttClient, ROOM_SLUG, DEVICE_EXTERNAL_ID, MQTT_HOST_VALUE, MQTT_PORT_VALUE);
+AudioCommandParser audioCommandParser;
+I2sAudioOutputDriver audioOutputDriver;
+AudioStatusPublisher audioStatusPublisher(mqttClient, ROOM_SLUG, DEVICE_EXTERNAL_ID);
+AudioPlaybackQueue audioPlaybackQueue;
+AudioPlaybackService audioPlaybackService(audioOutputDriver, audioStatusPublisher, audioPlaybackQueue);
+std::string audioCommandTopic = buildAudioCommandTopic(ROOM_SLUG, DEVICE_EXTERNAL_ID);
 
 unsigned long lastPublishAt = 0;
 unsigned long lastHeartbeatAt = 0;
@@ -58,6 +77,8 @@ void logBootConfig() {
     Serial.println(MQTT_HOST_VALUE);
     Serial.print("[CONFIG] mqttPort=");
     Serial.println(MQTT_PORT_VALUE);
+    Serial.print("[CONFIG] mqttPacketBufferSize=");
+    Serial.println(MQTT_PACKET_BUFFER_SIZE);
     Serial.print("[CONFIG] mqttTopic=");
     Serial.println(topic.c_str());
     Serial.print("[CONFIG] dhtPin=");
@@ -69,6 +90,18 @@ void logBootConfig() {
     Serial.print("[CONFIG] bh1750Address=");
     printHexAddress(BH1750_I2C_ADDRESS);
     Serial.println();
+    Serial.print("[CONFIG] audioEnabled=");
+    Serial.println(AUDIO_PLAYBACK_ENABLED ? "true" : "false");
+    Serial.print("[CONFIG] audioCommandTopic=");
+    Serial.println(audioCommandTopic.c_str());
+    Serial.print("[CONFIG] audioStatusTopic=");
+    Serial.println(buildAudioStatusTopic(ROOM_SLUG, DEVICE_EXTERNAL_ID).c_str());
+    Serial.print("[CONFIG] audioPins bclk=");
+    Serial.print(AUDIO_I2S_BCLK_PIN);
+    Serial.print(" lrc=");
+    Serial.print(AUDIO_I2S_LRC_PIN);
+    Serial.print(" din=");
+    Serial.println(AUDIO_I2S_DIN_PIN);
 }
 
 void logWifiStatus() {
@@ -141,6 +174,14 @@ void logEnvironmentReading(const EnvironmentReading& reading, const String& meas
         Serial.println();
     }
 
+    Serial.print("[PRESENCE] status=");
+    if (reading.hasPresence) {
+        Serial.print("valid presenceDetected=");
+        Serial.println(reading.presenceDetected ? "true" : "false");
+    } else {
+        Serial.println("invalid reason=not_initialized");
+    }
+
     if (!reading.hasAnyValidValue()) {
         Serial.println("[ENV] no_valid_sensor_reading=true");
     }
@@ -193,6 +234,50 @@ void processHeartbeat(unsigned long now) {
     lastHeartbeatAt = now;
     setHeartbeatLed(!heartbeatLedState);
 }
+
+std::string payloadToString(uint8_t* payload, unsigned int length) {
+    std::string value;
+    value.reserve(length);
+    for (unsigned int i = 0; i < length; ++i) {
+        value.push_back(static_cast<char>(payload[i]));
+    }
+    return value;
+}
+
+std::string extractCommandIdBestEffort(const std::string& payload) {
+    JsonDocument document;
+    if (deserializeJson(document, payload.c_str())) {
+        return std::string();
+    }
+    return std::string(document["commandId"] | document["requestId"] | "");
+}
+
+void handleMqttMessage(char* topic, uint8_t* payload, unsigned int length) {
+    Serial.print("[MQTT] message_received topic=");
+    Serial.print(topic);
+    Serial.print(" length=");
+    Serial.println(length);
+
+    if (audioCommandTopic != topic) {
+        return;
+    }
+
+    std::string body = payloadToString(payload, length);
+    std::string nowUtc = std::string(timeProvider.nowIsoUtc().c_str());
+    AudioCommandParseResult parsed = audioCommandParser.parse(body, nowUtc);
+    if (!parsed.ok) {
+        Serial.print("[AUDIO] command=rejected reason=");
+        Serial.println(parsed.reason.c_str());
+        audioPlaybackService.reject(extractCommandIdBestEffort(body), parsed.reason.c_str(), parsed.message.c_str(), nowUtc);
+        return;
+    }
+
+    Serial.print("[AUDIO] command=received commandId=");
+    Serial.print(parsed.command.commandId.c_str());
+    Serial.print(" type=");
+    Serial.println(audioCommandTypeToString(parsed.command.type));
+    audioPlaybackService.submit(parsed.command, nowUtc, millis());
+}
 }
 
 void setup() {
@@ -216,6 +301,14 @@ void setup() {
     lightSensor.begin();
     Serial.print("[SENSOR] bh1750_init=");
     Serial.println(lightSensor.isReady() ? "success" : "failed");
+    presenceSensor.begin();
+    Serial.println("[SENSOR] presence_ready=true");
+    bool audioReady = audioPlaybackService.begin();
+    Serial.print("[AUDIO] service_init=");
+    Serial.print(audioReady ? "ready" : "disabled");
+    Serial.println(" i2s_init=lazy");
+    mqttClient.setCallback(handleMqttMessage);
+    mqttPublisher.setAudioCommandTopic(audioCommandTopic.c_str());
 }
 
 void loop() {
@@ -226,6 +319,8 @@ void loop() {
     bool wifiConnected = wifiConnection.isConnected();
     if (wifiConnected && !wifiWasConnected) {
         beginStatusBlink(2);
+        String ipAddress = wifiConnection.getLocalIpAddress();
+        mqttPublisher.setLocalIpAddress(std::string(ipAddress.c_str()));
     }
     wifiWasConnected = wifiConnected;
 
@@ -239,6 +334,7 @@ void loop() {
     mqttWasConnected = mqttConnected;
 
     mqttPublisher.loop();
+    audioPlaybackService.loop(std::string(timeProvider.nowIsoUtc().c_str()), now);
 
     if (now - lastPublishAt < PUBLISH_INTERVAL_MS) {
         return;
@@ -248,6 +344,7 @@ void loop() {
 
     EnvironmentReading reading = environmentSensor.read();
     lightSensor.readInto(reading);
+    presenceSensor.readInto(reading);
     String measuredAt = timeProvider.nowIsoUtc();
 
     logEnvironmentReading(reading, measuredAt);

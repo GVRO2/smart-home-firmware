@@ -1,0 +1,20 @@
+| Gate | Status | Exit Code |
+|---|---:|---:|
+| Test Source Sanity | PASSED_WITH_WARNINGS | 0 |
+| Audio Status Tests | PASSED | 0 |
+| Unreachable Unity Tests | PASSED | 0 |
+| Native Tests | PASSED | 0 |
+| Build | PASSED | 0 |
+| Contract | PASSED | 0 |
+| Audio Contract | PASSED | 0 |
+| Audio Security | PASSED | 0 |
+| Audio Docs Consistency | PASSED | 0 |
+| Docs Consistency | PASSED | 0 |
+| Secrets | PASSED_WITH_WARNINGS | 0 |
+| Mock MQTT Contract | PASSED | 0 |
+| Hardware Abstractions | PASSED | 0 |
+| Physical Validation Policy | PASSED | 0 |
+
+Result: FIRMWARE_APPROVAL_REVIEW_PASSED_WITH_WARNINGS
+Date: 2026-06-04
+Run ID: 20260604-1238-firmware-approval-review-automatic

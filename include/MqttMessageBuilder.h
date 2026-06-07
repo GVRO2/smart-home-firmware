@@ -22,7 +22,8 @@ inline std::string buildEnvironmentPayloadJson(
     const EnvironmentReading& reading,
     const char* roomSlug,
     const char* deviceExternalId,
-    const std::string& measuredAtUtc
+    const std::string& measuredAtUtc,
+    const std::string& ipAddress = ""
 ) {
     if (!canBuildEnvironmentPayload(reading, measuredAtUtc)) {
         return std::string();
@@ -43,6 +44,14 @@ inline std::string buildEnvironmentPayloadJson(
 
     if (reading.hasLuminosity) {
         document["luminosityLux"] = reading.luminosityLux;
+    }
+
+    if (reading.hasPresence) {
+        document["presenceDetected"] = reading.presenceDetected;
+    }
+
+    if (!ipAddress.empty()) {
+        document["ipAddress"] = ipAddress;
     }
 
     std::string payload;

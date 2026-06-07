@@ -5,14 +5,15 @@
 #include <Wire.h>
 
 #include "EnvironmentReading.h"
+#include "LightSensor.h"
 
-class Bh1750LightSensor {
+class Bh1750LightSensor : public LightSensor {
 public:
     Bh1750LightSensor(uint8_t address, int sdaPin, int sclPin);
 
-    void begin();
-    void readInto(EnvironmentReading& reading);
-    bool isReady() const;
+    void begin() override;
+    void readInto(EnvironmentReading& reading) override;
+    bool isReady() const override;
 
 private:
     BH1750 lightMeter_;

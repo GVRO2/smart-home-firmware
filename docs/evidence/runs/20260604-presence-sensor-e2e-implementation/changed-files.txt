@@ -1,0 +1,36 @@
+Changed Files Log
+=================
+Date: 2026-06-04
+
+1. ESP32 Firmware Repository (c:\Users\KABUM\IdeaProjects\home-ai-room-observer-esp32):
+   - [NEW] include/PresenceReading.h
+   - [NEW] include/PresenceSensor.h
+   - [NEW] include/GpioPresenceSensor.h
+   - [NEW] src/GpioPresenceSensor.cpp
+   - [MODIFY] include/EnvironmentReading.h
+   - [MODIFY] include/MqttMessageBuilder.h
+   - [MODIFY] include/AppConfig.h
+   - [MODIFY] src/main.cpp
+   - [MODIFY] test/test_native/test_environment_reading.cpp
+   - [MODIFY] test/test_native/test_mqtt_contract.cpp
+
+2. Smart Home Repository (c:\Users\KABUM\IdeaProjects\smart-home):
+   - [MODIFY] contracts/openapi/home-ai-room-observer-api.yaml
+   - [NEW] src/main/resources/db/changelog/changes/010-add-presence-detected-to-measurements.yaml
+   - [MODIFY] src/main/resources/db/changelog/db.changelog-master.yaml
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/infrastructure/mqtt/MqttEnvironmentPayload.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/infrastructure/mqtt/MqttEnvironmentPayloadParser.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/application/usecase/RegisterEnvironmentalMeasurementCommand.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/domain/model/EnvironmentalMeasurement.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/infrastructure/persistence/entity/EnvironmentalMeasurementEntity.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/application/usecase/MeasurementResult.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/application/usecase/ApplicationMappers.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/application/usecase/RegisterEnvironmentalMeasurementUseCase.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/interfaces/rest/mapper/MeasurementRestMapper.java
+   - [MODIFY] src/main/java/br/com/homeai/roomobserver/interfaces/rest/mapper/DashboardRestMapper.java
+   - [MODIFY] src/test/java/br/com/homeai/roomobserver/infrastructure/mqtt/MqttBackendPipelineIT.java
+   - [MODIFY] src/test/java/br/com/homeai/roomobserver/infrastructure/persistence/MeasurementPersistenceIT.java
+   - [MODIFY] frontend/src/components/dashboard/RoomHealthCard.tsx
+   - [MODIFY] frontend/src/features/rooms/RoomCard.tsx
+   - [MODIFY] frontend/src/features/dashboard/LatestMeasurementCard.tsx
+   - [NEW] frontend/src/components/dashboard/RoomHealthCard.test.tsx

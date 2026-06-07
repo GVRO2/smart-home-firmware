@@ -1,0 +1,31 @@
+MQTT Topic Validation Report - 2026-06-04
+Status: MQTT_TOPIC_ALIGNED
+
+Official Topic Structure:
+------------------------
+1. Command Topic:
+   - Format: home/{room}/{device}/audio/command
+   - ESP32 subscription: home/bedroom/esp32-bedroom-01/audio/command (Configured in AudioConfig.h / MqttPublisher)
+   - Backend publication: home/bedroom/esp32-bedroom-01/audio/command (Configured in application.yml / HomeBrainProperties / HomeBrainSettings)
+   - Status: ALIGNED
+
+2. Status Topic:
+   - Format: home/{room}/{device}/audio/status
+   - ESP32 publication: home/bedroom/esp32-bedroom-01/audio/status (Configured in AudioConfig.h / AudioStatusPublisher)
+   - Status: ALIGNED
+
+Deprecated Topics:
+-----------------
+- Topic "home/{room}/{device}/speaker" has been removed/deprecated.
+- All references in application.yml, HomeBrainProperties.java, HomeBrainSettings.java, and backend tests (HomeBrainPropertiesTest.java, AudioPublisherTest.java) have been updated to the new official topic format.
+
+Backend MQTT Outbound Publisher Gap (P1):
+----------------------------------------
+- The backend configuration files (`application.yml`) and domain properties have been aligned to the official `home/{room}/{device}/audio/command` template.
+- Integration tests (`AudioPublisherTest`) now verify the publishing payload is built with the correct topic.
+- A real outbound MQTT publisher implementation in the backend logic is not present (not in current scope), which remains documented as a P1 gap.
+
+Verdict:
+--------
+MQTT_TOPIC_ALIGNED
+The topic templates between the ESP32 firmware and the backend are fully synchronized. The "/speaker" topic is deprecated and replaced by "/audio/command".

@@ -22,6 +22,7 @@ MqttPublisher::MqttPublisher(
       deviceExternalId_(deviceExternalId),
       host_(host),
       port_(port),
+      audioCommandTopic_(nullptr),
       lastConnectAttemptAt_(0) {
 }
 
@@ -45,6 +46,21 @@ void MqttPublisher::ensureConnected() {
 void MqttPublisher::loop() {
     if (client_.connected()) {
         client_.loop();
+    }
+}
+
+void MqttPublisher::setAudioCommandTopic(const char* topic) {
+    audioCommandTopic_ = topic;
+    subscribeAudioCommands();
+}
+
+void MqttPublisher::setLocalIpAddress(const std::string& ipAddress) {
+    localIpAddress_ = ipAddress;
+    if (localIpAddress_.empty()) {
+        Serial.println("[MQTT] MQTT_PAYLOAD_IP_OMITTED reason=invalid_ip");
+    } else {
+        Serial.print("[MQTT] MQTT_PAYLOAD_IP_INCLUDED ip=");
+        Serial.println(localIpAddress_.c_str());
     }
 }
 
@@ -77,7 +93,7 @@ bool MqttPublisher::publishEnvironment(const EnvironmentReading& reading, const 
     }
 
     std::string topic = buildEnvironmentTopic(roomSlug_, deviceExternalId_);
-    std::string payload = buildEnvironmentPayloadJson(reading, roomSlug_, deviceExternalId_, measuredAtUtc.c_str());
+    std::string payload = buildEnvironmentPayloadJson(reading, roomSlug_, deviceExternalId_, measuredAtUtc.c_str(), localIpAddress_);
 
     if (payload.empty()) {
         Serial.println("[MQTT] publish=skipped reason=payload_empty");
@@ -126,6 +142,7 @@ void MqttPublisher::connectInternal() {
     Serial.println(deviceExternalId_);
     if (client_.connect(deviceExternalId_)) {
         Serial.println("[MQTT] connected");
+        subscribeAudioCommands();
     } else {
         Serial.print("[MQTT] connect_failed state=");
         Serial.println(client_.state());
@@ -134,4 +151,15 @@ void MqttPublisher::connectInternal() {
         Serial.print(" port=");
         Serial.println(port_);
     }
+}
+
+void MqttPublisher::subscribeAudioCommands() {
+    if (audioCommandTopic_ == nullptr || !client_.connected()) {
+        return;
+    }
+    bool subscribed = client_.subscribe(audioCommandTopic_);
+    Serial.print("[MQTT] audio_command_subscription topic=");
+    Serial.print(audioCommandTopic_);
+    Serial.print(" status=");
+    Serial.println(subscribed ? "success" : "failed");
 }

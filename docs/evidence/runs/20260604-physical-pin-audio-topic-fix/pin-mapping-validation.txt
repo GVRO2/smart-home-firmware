@@ -1,0 +1,36 @@
+Pin Mapping Validation Report - 2026-06-04
+Status: PIN_MAPPING_VALIDATED
+
+Official Pin Assignments:
+-------------------------
+- DHT22 DATA         -> GPIO 4
+- BH1750 SDA         -> GPIO 21
+- BH1750 SCL         -> GPIO 22
+- Presence OUT       -> GPIO 27 (Reserved for physical testing)
+- Sound AO           -> GPIO 34 (Reserved for physical testing)
+- MAX98357A BCLK     -> GPIO 26
+- MAX98357A LRC/WS   -> GPIO 25
+- MAX98357A DIN/SD   -> GPIO 33
+- Heartbeat LED      -> GPIO 2
+
+Collision Checks:
+-----------------
+1. DIN Pin vs Presence Pin:
+   - AUDIO_I2S_DIN_PIN (33) != PRESENCE_SENSOR_PIN (27) => PASSED (No collision).
+2. I2S BCLK vs Sensor Pins:
+   - AUDIO_I2S_BCLK_PIN (26) is not in (4, 21, 22, 27, 34) => PASSED (No collision).
+3. I2S LRC vs Sensor Pins:
+   - AUDIO_I2S_LRC_PIN (25) is not in (4, 21, 22, 27, 34) => PASSED (No collision).
+4. Output pins on Input-only GPIO 34:
+   - None of (2, 26, 25, 33) are equal to 34 => PASSED (No safety violation).
+5. Pin Reuse:
+   - All 9 defined pins are unique (no duplicates) => PASSED.
+6. Documentation Consistency:
+   - firmware-hardware-wiring.md contains matching pins => PASSED.
+   - firmware-sdd.md contains matching pins => PASSED.
+   - firmware-agent-memory.md contains matching pins => PASSED.
+
+Verdict:
+--------
+PIN_MAPPING_VALIDATED
+All checks passed successfully. No physical pin conflicts exist in the current configuration.

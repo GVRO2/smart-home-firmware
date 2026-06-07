@@ -1,0 +1,35 @@
+================================================================================
+Pin Mapping Validation - 2026-06-04
+================================================================================
+
+1. Active Firmware Pin Configuration (from include/AppConfig.h):
+   - DHT_PIN                  -> GPIO 4
+   - I2C_SDA_PIN              -> GPIO 21
+   - I2C_SCL_PIN              -> GPIO 22
+   - AUDIO_I2S_BCLK_PIN       -> GPIO 26
+   - AUDIO_I2S_LRC_PIN        -> GPIO 25
+   - AUDIO_I2S_DIN_PIN        -> GPIO 33
+   - HEARTBEAT_LED_PIN        -> GPIO 2
+   - PRESENCE_SENSOR_PIN      -> GPIO 27
+   - SOUND_SENSOR_PIN         -> GPIO 34
+
+2. Verification of Wiring Safety & Collisions:
+   - Presence OUT Pin vs Audio DIN Pin:
+     - PRESENCE_SENSOR_PIN (GPIO 27) != AUDIO_I2S_DIN_PIN (GPIO 33) => PASSED (No collision).
+   - Audio Pins vs I2C Sensors:
+     - AUDIO_I2S_BCLK_PIN (26) and AUDIO_I2S_LRC_PIN (25) do not overlap with I2C (21, 22) or DHT (4) => PASSED (No collision).
+   - Input-only constraints:
+     - GPIO 34 is used for SOUND_SENSOR_PIN (analog input only).
+     - No output-mode pin (BCLK, LRC, DIN, LED) uses GPIO 34 or GPIO 35 => PASSED (No input-only violations).
+   - Strapping pin warnings:
+     - DHT_PIN uses GPIO 4, which is a strapping pin. This is documented and handled appropriately. No other active pins use strapping pins inappropriately.
+
+3. Global Safety Scanner Report:
+   - Scanned directories: src/, include/, lib/, test/, scripts/, docs/ (excluding evidence/runs and audit/tmp).
+   - Search targets and results:
+     - "DIN/SD" -> 0 matches found in active codebase and docs.
+     - "GPIO 27" associated with audio -> 0 matches found in active codebase and docs.
+     - "/speaker" -> 0 matches found in active codebase and docs.
+     - "audio real validated" -> 0 matches found in active codebase and docs.
+     - "REAL_ON_HARDWARE" -> 0 matches found in active codebase and docs.
+   - Result: PIN_MAPPING_VALIDATED

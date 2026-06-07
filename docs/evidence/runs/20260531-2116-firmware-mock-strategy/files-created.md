@@ -1,0 +1,31 @@
+# Files Created
+
+- `include/EnvironmentSensor.h`
+- `include/LightSensor.h`
+- `include/MqttPublisherPort.h`
+- `include/ClockProvider.h`
+- `include/NetworkConnection.h`
+- `include/AudioCommandSource.h`
+- `include/AudioStatusSink.h`
+- `include/mocks/MockEnvironmentSensor.h`
+- `include/mocks/MockLightSensor.h`
+- `include/mocks/MockAudioOutputDriver.h`
+- `include/mocks/MockMqttPublisher.h`
+- `include/mocks/MockClockProvider.h`
+- `include/mocks/MockNetworkConnection.h`
+- `scripts/dev/mock-esp32-environment-publisher.ps1`
+- `scripts/dev/mock-backend-audio-command-publisher.ps1`
+- `scripts/dev/mock-esp32-audio-status-publisher.ps1`
+- `scripts/dev/mock-audio-http-server.ps1`
+- `scripts/dev/run-mock-mqtt-scenario.ps1`
+- `scripts/quality/check-native-tests.ps1`
+- `scripts/quality/check-mock-mqtt-contract.ps1`
+- `scripts/quality/check-hardware-abstractions.ps1`
+- `scripts/quality/check-physical-validation-policy.ps1`
+- `docs/testing/firmware-test-strategy.md`
+- `docs/testing/firmware-mock-strategy.md`
+- `docs/testing/firmware-mqtt-simulation.md`
+- `docs/testing/physical-validation-policy.md`
+- `docs/testing/release-validation-policy.md`
+- `docs/evidence/runs/20260531-2116-firmware-mock-strategy/*`
+- `docs/audit/tmp/firmware-mock-strategy-implementation-report.md`

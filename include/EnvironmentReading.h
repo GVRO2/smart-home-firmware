@@ -6,9 +6,11 @@ struct EnvironmentReading {
     float temperatureCelsius = NAN;
     float humidityPercentage = NAN;
     float luminosityLux = NAN;
+    bool presenceDetected = false;
     bool hasTemperature = false;
     bool hasHumidity = false;
     bool hasLuminosity = false;
+    bool hasPresence = false;
 
     static bool isValidTemperature(float temperature) {
         return !std::isnan(temperature) && temperature >= -40.0f && temperature <= 80.0f;
@@ -23,6 +25,6 @@ struct EnvironmentReading {
     }
 
     bool hasAnyValidValue() const {
-        return hasTemperature || hasHumidity || hasLuminosity;
+        return hasTemperature || hasHumidity || hasLuminosity || hasPresence;
     }
 };

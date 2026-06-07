@@ -1,0 +1,19 @@
+Migration Validation Log
+========================
+Date: 2026-06-04
+
+Database Change Summary:
+- Liquibase migration: 010-add-presence-detected-to-measurements.yaml
+- Operations:
+  1. Add column `presence_detected` (BOOLEAN, NULLABLE) to `environmental_measurements`.
+  2. Drop check constraint `chk_measurement_has_at_least_one_sensor`.
+  3. Recreate check constraint `chk_measurement_has_at_least_one_sensor` to allow `presence_detected` as one of the valid sensor values:
+     (temperature_celsius IS NOT NULL OR humidity_percentage IS NOT NULL OR luminosity_lux IS NOT NULL OR presence_detected IS NOT NULL)
+
+Compatibility:
+- Nullable column preserves compatibility with older devices/sensors that do not publish presence.
+- Rollback plan drop column and revert check constraint to original state tested.
+
+Result:
+MIGRATION_VALIDATION_PASSED (SUCCESS)
+BUILD SUCCESS (Spring Boot / Liquibase startup verified via integration tests)

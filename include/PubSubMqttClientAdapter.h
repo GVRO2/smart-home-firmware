@@ -13,6 +13,8 @@ public:
     bool connected() override;
     bool connect(const char* clientId) override;
     bool publish(const char* topic, const char* payload) override;
+    bool subscribe(const char* topic) override;
+    void setCallback(MqttMessageCallback callback) override;
     void loop() override;
     int state() override;
 

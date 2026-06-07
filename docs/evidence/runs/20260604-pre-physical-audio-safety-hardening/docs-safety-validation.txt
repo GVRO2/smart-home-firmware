@@ -1,0 +1,40 @@
+================================================================================
+Documentation Safety Validation - 2026-06-04
+================================================================================
+
+1. Verification of the 'DIN/SD' Refactoring:
+   Active documentation files have been reviewed and corrected to split 'DIN/SD' into:
+   - DIN -> GPIO33 (Data Input for I2S communication)
+   - SD -> Não conectar na POC atual (Shutdown/Enable pin)
+
+   Updated Files:
+   - docs/sdd/firmware-sdd.md (lines 52, 204)
+   - docs/squad/firmware-agent-memory.md (lines 25, 61)
+   - docs/architecture/firmware-hardware-wiring.md (line 39)
+
+2. SD Pin Shutdown/Enable Explanation:
+   - In docs/architecture/firmware-hardware-wiring.md, an explicit note has been added explaining that:
+     "O pino SD do MAX98357A é shutdown/enable (não data input) e deve ser deixado desconectado na POC atual para que o chip utilize seu pull-up interno e opere sempre habilitado."
+   - The SDD and squad memory have also been updated to state:
+     "SD: não conectar na POC atual (SD é shutdown/enable, não data input)."
+
+3. SDD Audio Scope Contradictions Resolved:
+   - Scope Inclusions (docs/sdd/firmware-sdd.md):
+     - Added "- Audio local limitado via MAX98357A (reprodução de tons/alarme local)" under current POC scope.
+     - Kept limited I2S audio capability local description in Section 26.
+   - Scope Exclusions (docs/sdd/firmware-sdd.md):
+     - Clarified out of scope items under Section 3:
+       "- Microfone, wake word, TTS, streaming real, decodificação real de PLAY_URL e IA embarcada (áudio local limitado via MAX98357A está dentro do escopo)."
+
+4. SD wiring check:
+   - Verified that NO document instructs or recommends connecting the SD pin of the MAX98357A to GPIO 33 or any other GPIO on the ESP32.
+   - SD pin is explicitly marked as "não conectar na POC atual".
+
+5. Global Dangerous Patterns Absence:
+   - The global safety scanner ran on all active files and confirmed zero occurrences of:
+     - "DIN/SD"
+     - "GPIO 27" associated with audio
+     - "/speaker" (the MQTT topic component)
+     - "audio real validated"
+     - "REAL_ON_HARDWARE"
+   - Output: PIN_MAPPING_VALIDATED.

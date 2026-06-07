@@ -1,0 +1,13 @@
+governanceKit:
+  repository: C:\Users\KABUM\IdeaProjects\engineering-governance-kit
+  importedSkills:
+    - name: Test Harness Quality & Anti-False-Success
+      path: skills/test-harness-quality-skill.md
+      appliesTo:
+        - C/C++ Unity tests
+        - PlatformIO native tests
+        - C# xUnit/NUnit/MSTest tests
+      requiredFor:
+        - test harness edits
+        - test registration edits
+        - approval review gate changes

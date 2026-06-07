@@ -1,0 +1,19 @@
+MQTT Contract Validation Log
+============================
+Date: 2026-06-04
+
+MQTT Contract Verification:
+- Field: presenceDetected
+- Type: boolean
+- Status: Optional (nullable in DB and OpenAPI, omitted when invalid/unavailable)
+
+Validation Checklist:
+1. ESP32 publishes 'presenceDetected: true/false' when sensor is present and reading is valid.
+2. ESP32 omits the 'presenceDetected' field completely if the presence sensor is disabled/unavailable.
+3. ESP32 MQTT topic follows the official convention: 'home/+/+/environment'.
+4. Backend parses optional boolean 'presenceDetected' correctly.
+5. Backend strictly rejects 'presenceDetected' values of invalid type (e.g. string "true", "motion").
+6. Legacy messages omitting 'presenceDetected' are accepted, mapped to null, and parsed successfully.
+
+FIRMWARE_CONTRACT_GATE_PASSED
+FIRMWARE_MOCK_MQTT_CONTRACT_GATE_PASSED

@@ -16,6 +16,7 @@ MqttPublisher::MqttPublisher(
       deviceExternalId_(deviceExternalId),
       host_(host),
       port_(port),
+      audioCommandTopic_(nullptr),
       lastConnectAttemptAt_(0) {
 }
 
@@ -33,6 +34,11 @@ void MqttPublisher::loop() {
     if (client_.connected()) {
         client_.loop();
     }
+}
+
+void MqttPublisher::setAudioCommandTopic(const char* topic) {
+    audioCommandTopic_ = topic;
+    subscribeAudioCommands();
 }
 
 bool MqttPublisher::publishEnvironment(const EnvironmentReading& reading, const std::string& measuredAtUtc) {
@@ -63,5 +69,13 @@ bool MqttPublisher::publishEnvironment(const EnvironmentReading& reading, const 
 }
 
 void MqttPublisher::connectInternal() {
-    client_.connect(deviceExternalId_);
+    if (client_.connect(deviceExternalId_)) {
+        subscribeAudioCommands();
+    }
+}
+
+void MqttPublisher::subscribeAudioCommands() {
+    if (audioCommandTopic_ != nullptr && client_.connected()) {
+        client_.subscribe(audioCommandTopic_);
+    }
 }

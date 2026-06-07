@@ -1,0 +1,49 @@
+API Response Evidence Log
+==========================
+Date: 2026-06-04
+
+OpenAPI Contract Updates:
+- Model 'MeasurementResponse' includes optional field 'presenceDetected' (boolean).
+- Model 'DashboardLatestMeasurementResponse' includes optional field 'presenceDetected' (boolean).
+
+REST API Responses Mapping Validation:
+- When presence_detected is true:
+  {
+    "id": "7fa924d5-0d18-40fe-ac91-dd283076c97f",
+    "deviceId": "esp32-bedroom-01",
+    "room": "bedroom",
+    "measuredAt": "2026-06-04T12:00:00Z",
+    "receivedAt": "2026-06-04T12:00:05Z",
+    "temperatureCelsius": 24.5,
+    "humidityPercentage": 60.0,
+    "luminosityLux": 150.0,
+    "presenceDetected": true
+  }
+- When presence_detected is false:
+  {
+    "id": "7fa924d5-0d18-40fe-ac91-dd283076c97f",
+    "deviceId": "esp32-bedroom-01",
+    "room": "bedroom",
+    "measuredAt": "2026-06-04T12:00:00Z",
+    "receivedAt": "2026-06-04T12:00:05Z",
+    "temperatureCelsius": 24.5,
+    "humidityPercentage": 60.0,
+    "luminosityLux": 150.0,
+    "presenceDetected": false
+  }
+- When presence_detected is absent (legacy):
+  {
+    "id": "7fa924d5-0d18-40fe-ac91-dd283076c97f",
+    "deviceId": "esp32-bedroom-01",
+    "room": "bedroom",
+    "measuredAt": "2026-06-04T12:00:00Z",
+    "receivedAt": "2026-06-04T12:00:05Z",
+    "temperatureCelsius": 24.5,
+    "humidityPercentage": 60.0,
+    "luminosityLux": 150.0,
+    "presenceDetected": null
+  }
+
+Result:
+API_RESPONSE_EVIDENCE_VALIDATED (SUCCESS)
+All REST mappers (`MeasurementRestMapper` and `DashboardRestMapper`) include `presenceDetected`.

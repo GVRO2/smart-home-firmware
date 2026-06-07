@@ -1,0 +1,26 @@
+# Files Created
+
+- `docs/sdd/firmware-sdd.md`
+- `docs/architecture/firmware-architecture.md`
+- `docs/architecture/firmware-data-flow.md`
+- `docs/architecture/firmware-hardware-wiring.md`
+- `docs/architecture/firmware-security.md`
+- `docs/governance/firmware-governance.md`
+- `docs/governance/quality-gates.md`
+- `docs/governance/release-readiness.md`
+- `docs/governance/evidence-policy.md`
+- `docs/governance/agent-operating-rules.md`
+- `docs/squad/*`
+- `docs/backlog/firmware-backlog.md`
+- `docs/decisions/*`
+- `docs/prompts/*`
+- `scripts/dev/*`
+- `scripts/quality/check-firmware-build.ps1`
+- `scripts/quality/check-firmware-contract.ps1`
+- `scripts/quality/check-firmware-docs-consistency.ps1`
+- `scripts/quality/check-secrets.ps1`
+- `scripts/governance/run-firmware-approval-review.ps1`
+- `docs/audit/tmp/firmware-current-state-analysis-report.md`
+- `docs/audit/tmp/backend-governance-reference-analysis-report.md`
+- `docs/audit/tmp/firmware-approval-review-report.md`
+- `docs/audit/tmp/firmware-governance-bootstrap-final-report.md`

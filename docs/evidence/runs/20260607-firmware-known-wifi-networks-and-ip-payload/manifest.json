@@ -1,0 +1,72 @@
+{
+  "runId": "20260607-firmware-known-wifi-networks-and-ip-payload",
+  "status": "FIRMWARE_KNOWN_WIFI_AND_IP_PAYLOAD_IMPLEMENTED",
+  "scope": "firmware-wifi-selection-and-ip-payload-only",
+  "firmwareCodeChanged": true,
+  "backendCodeChanged": false,
+  "productCodeChanged": true,
+  "physicalE2eExecuted": false,
+  "hardwareValidationExecuted": false,
+  "runtimeValidationExecuted": false,
+  "productionReadinessClaimed": false,
+  "secretsCommitted": false,
+  "nonClaims": [
+    "physical-e2e-not-run",
+    "hardware-validation-not-claimed",
+    "backend-runtime-validation-not-run",
+    "production-readiness-not-claimed",
+    "secrets-not-committed"
+  ],
+  "filesCreated": [
+    "include/KnownWifiNetworkProvider.h",
+    "src/KnownWifiNetworkProvider.cpp",
+    "include/NetworkAddressProvider.h",
+    "src/NetworkAddressProvider.cpp"
+  ],
+  "filesModified": [
+    "include/Secrets.h.example",
+    "include/WiFiConnection.h",
+    "src/WiFiConnection.cpp",
+    "include/MqttMessageBuilder.h",
+    "include/MqttPublisher.h",
+    "src/MqttPublisher.cpp",
+    "src/main.cpp",
+    "test/test_native/test_mqtt_contract.cpp"
+  ],
+  "testsAdded": [
+    "shouldBuildPayloadWithIpAddressWhenValidIpIsProvided",
+    "shouldOmitIpAddressWhenEmptyIpIsProvided"
+  ],
+  "testResults": {
+    "totalTests": 72,
+    "passedTests": 72,
+    "failedTests": 0,
+    "duration": "00:00:21.835",
+    "environment": "native"
+  },
+  "acceptanceCriteria": {
+    "CA-001": "IMPLEMENTED",
+    "CA-002": "IMPLEMENTED",
+    "CA-003": "IMPLEMENTED",
+    "CA-004": "IMPLEMENTED",
+    "CA-005": "IMPLEMENTED",
+    "CA-006": "IMPLEMENTED",
+    "CA-007": "IMPLEMENTED",
+    "CA-008": "VALIDATED"
+  },
+  "evidenceFiles": [
+    "summary.md",
+    "commands.md",
+    "validation-results.md",
+    "test-results.md",
+    "payload-sample.md",
+    "wifi-selection-design.md",
+    "risk-analysis.md",
+    "recommendation.md",
+    "git-status-final.txt",
+    "manifest.json"
+  ],
+  "timestamp": "2026-06-07T16:22:00Z",
+  "platform": "windows",
+  "toolchain": "platformio-native"
+}

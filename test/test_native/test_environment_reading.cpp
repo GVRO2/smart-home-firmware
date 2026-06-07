@@ -82,3 +82,18 @@ void shouldRejectReadingWhenLuminosityIsInvalid() {
     TEST_ASSERT_FALSE(EnvironmentReading::isValidLuminosity(NAN));
     TEST_ASSERT_FALSE(EnvironmentReading::isValidLuminosity(-0.1f));
 }
+
+void shouldAcceptReadingWhenPresenceIsValid() {
+    EnvironmentReading reading;
+    reading.presenceDetected = true;
+    reading.hasPresence = true;
+    TEST_ASSERT_TRUE(reading.hasAnyValidValue());
+}
+
+void shouldAcceptReadingWhenPresenceIsFalse() {
+    EnvironmentReading reading;
+    reading.presenceDetected = false;
+    reading.hasPresence = true;
+    TEST_ASSERT_TRUE(reading.hasAnyValidValue());
+}
+

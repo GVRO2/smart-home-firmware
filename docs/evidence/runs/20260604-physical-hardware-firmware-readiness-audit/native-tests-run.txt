@@ -1,0 +1,71 @@
+Processing test_native in native environment
+--------------------------------------------------------------------------------
+Building...
+Testing...
+test\test_native\test_mqtt_contract.cpp:781: shouldAcceptReadingWhenTemperatureAndHumidityAreValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:782: shouldAcceptReadingWhenOnlyTemperatureIsValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:783: shouldAcceptReadingWhenOnlyHumidityIsValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:784: shouldRejectReadingWhenAllSensorValuesAreInvalid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:785: shouldRejectReadingWhenTemperatureIsBelowMinimum	[PASSED]
+test\test_native\test_mqtt_contract.cpp:786: shouldRejectReadingWhenTemperatureIsAboveMaximum	[PASSED]
+test\test_native\test_mqtt_contract.cpp:787: shouldRejectReadingWhenHumidityIsBelowMinimum	[PASSED]
+test\test_native\test_mqtt_contract.cpp:788: shouldRejectReadingWhenHumidityIsAboveMaximum	[PASSED]
+test\test_native\test_mqtt_contract.cpp:789: shouldAcceptReadingWhenLuminosityIsValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:790: shouldRejectReadingWhenLuminosityIsInvalid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:791: shouldBuildOfficialMqttTopicWhenRoomAndDeviceAreProvided	[PASSED]
+test\test_native\test_mqtt_contract.cpp:792: shouldNotUseDeprecatedMqttTopicFormat	[PASSED]
+test\test_native\test_mqtt_contract.cpp:793: shouldBuildPayloadWhenTemperatureAndHumidityAreValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:794: shouldBuildPayloadWithLuminosityWhenLightReadingIsValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:795: shouldOmitLuminosityWhenLightReadingIsInvalid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:796: shouldOmitTemperatureWhenTemperatureIsInvalid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:797: shouldOmitHumidityWhenHumidityIsInvalid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:798: shouldNotBuildPayloadWhenNoSensorValueIsValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:799: shouldRejectPublishWhenMeasuredAtIsEmpty	[PASSED]
+test\test_native\test_mqtt_contract.cpp:800: shouldIncludeMeasuredAtWhenTimestampIsAvailable	[PASSED]
+test\test_native\test_mqtt_contract.cpp:801: shouldPublishWhenReadingAndTimestampAreValid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:802: shouldNotPublishWhenReadingIsInvalid	[PASSED]
+test\test_native\test_mqtt_contract.cpp:803: shouldNotPublishWhenTimestampIsEmpty	[PASSED]
+test\test_native\test_mqtt_contract.cpp:804: shouldPublishToOfficialEnvironmentTopic	[PASSED]
+test\test_native\test_mqtt_contract.cpp:805: shouldBuildAudioCommandAndStatusTopics	[PASSED]
+test\test_native\test_mqtt_contract.cpp:806: shouldSubscribeAudioCommandTopicAfterMqttConnect	[PASSED]
+test\test_native\test_mqtt_contract.cpp:807: shouldParseValidPlayAudioUrlCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:808: shouldRejectAudioCommandWithoutCommandId	[PASSED]
+test\test_native\test_mqtt_contract.cpp:809: shouldRejectUnknownAudioCommandType	[PASSED]
+test\test_native\test_mqtt_contract.cpp:810: shouldRejectAudioVolumeBelowMinimum	[PASSED]
+test\test_native\test_mqtt_contract.cpp:811: shouldRejectAudioVolumeAboveMaximum	[PASSED]
+test\test_native\test_mqtt_contract.cpp:812: shouldRejectInvalidAudioJson	[PASSED]
+test\test_native\test_mqtt_contract.cpp:813: shouldRejectInvalidToneFrequency	[PASSED]
+test\test_native\test_mqtt_contract.cpp:814: shouldRejectInvalidToneDuration	[PASSED]
+test\test_native\test_mqtt_contract.cpp:815: shouldRejectHttpsAudioUrl	[PASSED]
+test\test_native\test_mqtt_contract.cpp:816: shouldAcceptLocalAudioStreamCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:817: shouldRejectStreamWithoutExpiresAt	[PASSED]
+test\test_native\test_mqtt_contract.cpp:818: shouldRejectPublicAudioUrl	[PASSED]
+test\test_native\test_mqtt_contract.cpp:819: shouldRejectUrlWithoutHost	[PASSED]
+test\test_native\test_mqtt_contract.cpp:820: shouldRejectExpiredAudioCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:821: shouldAcceptStopAudioCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:822: shouldAcceptSetVolumeCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:823: shouldAcceptPlayToneCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:824: shouldEnqueueAudioCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:825: shouldRejectFullAudioQueue	[PASSED]
+test\test_native\test_mqtt_contract.cpp:826: shouldRespectHighPriorityAudioCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:827: shouldClearAudioQueueOnInterruptFlow	[PASSED]
+test\test_native\test_mqtt_contract.cpp:828: shouldPreserveFifoForSamePriorityAudioCommands	[PASSED]
+test\test_native\test_mqtt_contract.cpp:829: shouldNotLoseQueueStateAfterRejectedAudioCommand	[PASSED]
+test\test_native\test_mqtt_contract.cpp:830: shouldPublishAcceptedAudioStatus	[PASSED]
+test\test_native\test_mqtt_contract.cpp:831: shouldPublishPlayingAudioStatus	[PASSED]
+test\test_native\test_mqtt_contract.cpp:832: shouldPublishCompletedAudioStatus	[PASSED]
+test\test_native\test_mqtt_contract.cpp:833: shouldPublishStoppedAudioStatus	[PASSED]
+test\test_native\test_mqtt_contract.cpp:834: shouldPublishRejectedAudioStatus	[PASSED]
+test\test_native\test_mqtt_contract.cpp:835: shouldPublishFailedAudioStatus	[PASSED]
+test\test_native\test_mqtt_contract.cpp:836: shouldRunAudioPlaybackFlowWithoutHardware	[PASSED]
+test\test_native\test_mqtt_contract.cpp:837: shouldRejectAudioPlaybackWhenDriverCannotStart	[PASSED]
+---------------- native:test_native [PASSED] Took 17.15 seconds ----------------
+
+=================================== SUMMARY ===================================
+Environment    Test         Status    Duration
+-------------  -----------  --------  ------------
+native         test_native  PASSED    00:00:17.146
+================= 57 test cases: 57 succeeded in 00:00:17.146 =================
+registered_run_test_count=57
+executed_test_count=57
+FIRMWARE_NATIVE_TESTS_PASSED

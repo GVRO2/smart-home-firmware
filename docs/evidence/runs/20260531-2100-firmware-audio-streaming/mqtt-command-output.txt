@@ -1,0 +1,3 @@
+BLOCKED_BY_BROKER_UNAVAILABLE
+
+Real mosquitto_pub command execution was not performed in this run.

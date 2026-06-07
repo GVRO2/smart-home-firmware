@@ -1,0 +1,33 @@
+================================================================================
+Approval Review Gates Summary - 2026-06-04
+================================================================================
+
+Mode: automatic
+Overall Status: FIRMWARE_APPROVAL_REVIEW_PASSED_WITH_WARNINGS
+
+Gate results:
+--------------------------------------------------------------------------------
+| Gate                          | Status               | Exit Code | Note
+|-------------------------------|----------------------|-----------|------------
+| Test Source Sanity            | PASSED               | 0         | Passed
+| Audio Status Tests            | PASSED               | 0         | Passed
+| Unreachable Unity Tests       | PASSED               | 0         | Passed
+| Native Tests                  | PASSED               | 0         | Passed
+| Build                         | PASSED               | 0         | Passed
+| Contract                      | PASSED               | 0         | Passed
+| Pin Collision Check           | PASSED               | 0         | Passed (includes global safety scanner)
+| Audio Contract                | PASSED               | 0         | Passed
+| Audio Security                | PASSED               | 0         | Passed
+| Audio Docs Consistency        | PASSED               | 0         | Passed
+| Docs Consistency              | PASSED               | 0         | Passed
+| Secrets                       | PASSED_WITH_WARNINGS | 0         | local Secrets.h exists (untracked)
+| Mock MQTT Contract            | PASSED               | 0         | Passed
+| Hardware Abstractions         | PASSED               | 0         | Passed
+| Physical Validation Policy    | PASSED               | 0         | Passed
+--------------------------------------------------------------------------------
+
+Detailed warnings:
+- Secrets passed with warnings: include/Secrets.h exists locally; acceptable only because it is untracked/ignored.
+
+Detailed failures:
+- None
